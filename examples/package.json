@@ -1,0 +1,16 @@
+{
+  "name": "twitter-api-typescript-sdk-examples",
+  "version": "1.0.0",
+  "description": "Examples for the Twitter API TypeScript SDK",
+  "dependencies": {
+    "dotenv": "^9.0.0",
+    "express": "^4.17.1",
+    "twitter-api-sdk": "latest"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.11",
+    "@types/node": "^15.0.2",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
+  }
+}

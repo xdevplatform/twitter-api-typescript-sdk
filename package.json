@@ -1,0 +1,43 @@
+{
+  "name": "twitter-api-sdk",
+  "version": "1.0.0",
+  "description": "A TypeScript SDK for the Twitter API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prebuild": "yarn clean",
+    "prepublishOnly": "yarn test",
+    "build:watch": "tsc --watch",
+    "test": "jest",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@types/node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "jest": "^27.5.1",
+    "nock": "^13.2.4",
+    "ts-jest": "^27.0.3",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.4.4"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twitterdev/twitter-api-typescript-sdk.git"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/twitterdev/twitter-api-typescript-sdk/issues"
+  },
+  "homepage": "https://github.com/twitterdev/twitter-api-typescript-sdk#readme"
+}
