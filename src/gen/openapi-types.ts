@@ -101,6 +101,10 @@ export interface paths {
     /** Delete specified Tweet (in the path) by ID. */
     delete: operations["deleteTweetById"];
   };
+  "/2/tweets/{id}/quote_tweets": {
+    /** Returns a variety of information about each tweet that quotes the Tweet specified by the requested ID. */
+    get: operations["findTweetsThatQuoteATweet"];
+  };
   "/2/tweets/{id}/hidden": {
     /** Hides or unhides a reply to an owned conversation. */
     put: operations["hideReplyById"];
@@ -578,6 +582,17 @@ export interface components {
       };
       errors?: components["schemas"]["Problem"][];
     };
+    QuoteTweetLookupResponse: {
+      data?: components["schemas"]["Tweet"][];
+      includes?: components["schemas"]["Expansions"];
+      meta?: {
+        /** @description This value is used to get the next 'page' of results by providing it to the pagination_token parameter. */
+        next_token?: string;
+        /** @description The number of quoting tweets returned in this response */
+        result_count?: number;
+      };
+      errors?: components["schemas"]["Problem"][];
+    };
     SingleTweetLookupResponse: {
       data?: components["schemas"]["Tweet"];
       includes?: components["schemas"]["Expansions"];
@@ -771,6 +786,15 @@ export interface components {
       meta?: {
         /** @description The number of list results returned in this response */
         result_count?: number;
+      };
+      errors?: components["schemas"]["Problem"][];
+    };
+    AddBookmarkRequest: {
+      tweet_id: components["schemas"]["TweetID"];
+    };
+    BookmarkMutationResponse: {
+      data?: {
+        bookmarked?: boolean;
       };
       errors?: components["schemas"]["Problem"][];
     };
@@ -2365,6 +2389,40 @@ export interface operations {
       default: components["responses"]["HttpErrorResponse"];
     };
   };
+  /** Returns a variety of information about each tweet that quotes the Tweet specified by the requested ID. */
+  findTweetsThatQuoteATweet: {
+    parameters: {
+      path: {
+        /** The ID of the Quoted Tweet. */
+        id: components["schemas"]["TweetID"];
+      };
+      query: {
+        /** The maximum number of results to be returned. */
+        max_results?: number;
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["TweetExpansionsParameter"];
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of Place fields to display. */
+        "place.fields"?: components["parameters"]["PlaceFieldsParameter"];
+        /** A comma separated list of Poll fields to display. */
+        "poll.fields"?: components["parameters"]["PollFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request was successful */
+      200: {
+        content: {
+          "application/json": components["schemas"]["QuoteTweetLookupResponse"];
+        };
+      };
+      default: components["responses"]["HttpErrorResponse"];
+    };
+  };
   /** Hides or unhides a reply to an owned conversation. */
   hideReplyById: {
     parameters: {
@@ -3415,6 +3473,7 @@ export type findTweetsById = operations['findTweetsById']
 export type createTweet = operations['createTweet']
 export type findTweetById = operations['findTweetById']
 export type deleteTweetById = operations['deleteTweetById']
+export type findTweetsThatQuoteATweet = operations['findTweetsThatQuoteATweet']
 export type hideReplyById = operations['hideReplyById']
 export type tweetsRecentSearch = operations['tweetsRecentSearch']
 export type tweetsFullarchiveSearch = operations['tweetsFullarchiveSearch']

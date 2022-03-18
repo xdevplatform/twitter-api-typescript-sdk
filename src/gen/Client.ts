@@ -44,6 +44,7 @@ import {
   createTweet,
   findTweetById,
   deleteTweetById,
+  findTweetsThatQuoteATweet,
   hideReplyById,
   tweetsRecentSearch,
   tweetsFullarchiveSearch,
@@ -754,6 +755,29 @@ export class Client {
         ...request_options,
         endpoint: `/2/tweets/${id}`,
         method: "DELETE",
+      }),
+
+    /**
+		* Retrieve tweets that quote a tweet.
+		*
+
+		* Returns a variety of information about each tweet that quotes the Tweet specified by the requested ID.
+		* @param id - The ID of the Quoted Tweet.
+		* @param params - The params for findTweetsThatQuoteATweet
+		* @param request_options - Customize the options for this request
+		*/
+    findTweetsThatQuoteATweet: (
+      id: string,
+      params: TwitterParams<findTweetsThatQuoteATweet> = {},
+      request_options?: Partial<RequestOptions>
+    ): Promise<TwitterResponse<findTweetsThatQuoteATweet>> =>
+      rest<TwitterResponse<findTweetsThatQuoteATweet>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/tweets/${id}/quote_tweets`,
+        params,
+        method: "GET",
       }),
 
     /**
