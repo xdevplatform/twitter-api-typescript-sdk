@@ -55,9 +55,11 @@ export async function request({
     {
       ...options,
       headers: {
-        "User-Agent": `twitter-api-typescript-sdk/1.0.0`,
         ...options.headers,
-        ...(isPost ? { "Content-Type": "application/json; charset=utf-8" } : undefined),
+        "User-Agent": `twitter-api-typescript-sdk/1.0.0`,
+        ...(isPost
+          ? { "Content-Type": "application/json; charset=utf-8" }
+          : undefined),
         ...authHeader,
       },
       method,
