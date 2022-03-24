@@ -37,6 +37,16 @@ export interface paths {
     /** Causes the source user to unblock the target user. The source user must match the user context authorizing the request */
     delete: operations["usersIdUnblock"];
   };
+  "/2/users/{id}/bookmarks": {
+    /** Returns Tweet objects that have been bookmarked by the requesting user */
+    get: operations["getUsersIdBookmarks"];
+    /** Adds a Tweet (ID in the body) to the requesting user's (in the path) bookmarks */
+    post: operations["postUsersIdBookmarks"];
+  };
+  "/2/users/{id}/bookmarks/{tweet_id}": {
+    /** Removes a Tweet from the requesting user's bookmarked Tweets. */
+    delete: operations["usersIdBookmarksDelete"];
+  };
   "/2/users/{source_user_id}/muting/{target_user_id}": {
     /** Causes the source user to unmute the target user. The source user must match the user context authorizing the request */
     delete: operations["usersIdUnmute"];
@@ -983,7 +993,7 @@ export interface components {
       value: unknown;
       resource_id: string;
       /** @enum {string} */
-      resource_type: "user" | "tweet" | "media" | "list";
+      resource_type: "user" | "tweet" | "media" | "list" | "space";
     };
     /** @description A problem that indicates you are not allowed to see a particular Tweet, User, etc. */
     ResourceUnauthorizedProblem: components["schemas"]["Problem"] & {
@@ -993,21 +1003,21 @@ export interface components {
       section: "data" | "includes";
       resource_id: string;
       /** @enum {string} */
-      resource_type: "tweet" | "user" | "media";
+      resource_type: "tweet" | "user" | "media" | "list" | "space";
     };
     /** @description A problem that indicates a particular Tweet, User, etc. is not available to you. */
     ResourceUnavailableProblem: components["schemas"]["Problem"] & {
       parameter: string;
       resource_id: string;
       /** @enum {string} */
-      resource_type: "user" | "tweet" | "media";
+      resource_type: "user" | "tweet" | "media" | "list" | "space";
     };
     /** @description A problem that indicates that you are not allowed to see a particular field on a Tweet, User, etc. */
     FieldUnauthorizedProblem: components["schemas"]["Problem"] & {
       /** @enum {string} */
       section: "data" | "includes";
       /** @enum {string} */
-      resource_type: "tweet" | "media";
+      resource_type: "tweet" | "user" | "media" | "list" | "space";
       field: string;
     };
     /** @description A problem that indicates your client is forbidden from making this request. */
@@ -1021,7 +1031,7 @@ export interface components {
     DisallowedResourceProblem: components["schemas"]["Problem"] & {
       resource_id: string;
       /** @enum {string} */
-      resource_type: "tweet" | "media";
+      resource_type: "tweet" | "user" | "media" | "list" | "space";
       /** @enum {string} */
       section: "data" | "includes";
     };
@@ -1887,6 +1897,85 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["UsersBlockingMutationResponse"];
+        };
+      };
+      default: components["responses"]["HttpErrorResponse"];
+    };
+  };
+  /** Returns Tweet objects that have been bookmarked by the requesting user */
+  getUsersIdBookmarks: {
+    parameters: {
+      path: {
+        /** The ID of the user for whom to return results */
+        id: components["schemas"]["UserID"];
+      };
+      query: {
+        /** The maximum number of results */
+        max_results?: components["parameters"]["MaxResultsRequestParameter"];
+        /** This parameter is used to get the next 'page' of results. */
+        pagination_token?: components["parameters"]["PaginationTokenRequestParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["TweetExpansionsParameter"];
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of Place fields to display. */
+        "place.fields"?: components["parameters"]["PlaceFieldsParameter"];
+        /** A comma separated list of Poll fields to display. */
+        "poll.fields"?: components["parameters"]["PollFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request was successful */
+      200: {
+        content: {
+          "application/json": components["schemas"]["GenericTweetsTimelineResponse"];
+        };
+      };
+      default: components["responses"]["HttpErrorResponse"];
+    };
+  };
+  /** Adds a Tweet (ID in the body) to the requesting user's (in the path) bookmarks */
+  postUsersIdBookmarks: {
+    parameters: {
+      path: {
+        /** The ID of the user for whom to add bookmarks */
+        id: components["schemas"]["UserID"];
+      };
+    };
+    responses: {
+      /** The request was successful */
+      200: {
+        content: {
+          "application/json": components["schemas"]["BookmarkMutationResponse"];
+        };
+      };
+      default: components["responses"]["HttpErrorResponse"];
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddBookmarkRequest"];
+      };
+    };
+  };
+  /** Removes a Tweet from the requesting user's bookmarked Tweets. */
+  usersIdBookmarksDelete: {
+    parameters: {
+      path: {
+        /** The ID of the user whose bookmark is to be removed. */
+        id: components["schemas"]["UserID"];
+        /** The ID of the tweet that the user is removing from bookmarks */
+        tweet_id: components["schemas"]["TweetID"];
+      };
+    };
+    responses: {
+      /** The request was successful */
+      200: {
+        content: {
+          "application/json": components["schemas"]["BookmarkMutationResponse"];
         };
       };
       default: components["responses"]["HttpErrorResponse"];
@@ -3454,6 +3543,9 @@ export type findUserByUsername = operations['findUserByUsername']
 export type usersIdBlock = operations['usersIdBlock']
 export type usersIdBlocking = operations['usersIdBlocking']
 export type usersIdUnblock = operations['usersIdUnblock']
+export type getUsersIdBookmarks = operations['getUsersIdBookmarks']
+export type postUsersIdBookmarks = operations['postUsersIdBookmarks']
+export type usersIdBookmarksDelete = operations['usersIdBookmarksDelete']
 export type usersIdUnmute = operations['usersIdUnmute']
 export type usersIdMute = operations['usersIdMute']
 export type usersIdMuting = operations['usersIdMuting']

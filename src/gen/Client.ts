@@ -25,6 +25,9 @@ import {
   usersIdBlock,
   usersIdBlocking,
   usersIdUnblock,
+  getUsersIdBookmarks,
+  postUsersIdBookmarks,
+  usersIdBookmarksDelete,
   usersIdUnmute,
   usersIdMute,
   usersIdMuting,
@@ -101,6 +104,83 @@ export class Client {
     this.#defaultRequestOptions = requestOptions;
   }
 
+  /**
+   * Bookmarks
+   *
+   * Endpoints related to retrieving, managing bookmarks of a user
+   *
+   * Find out more
+   * https://developer.twitter.com/en/docs/twitter-api/bookmarks
+   */
+  public readonly bookmarks = {
+    /**
+		* Bookmarks by User
+		*
+
+		* Returns Tweet objects that have been bookmarked by the requesting user
+		* @param id - The ID of the user for whom to return results
+		* @param params - The params for getUsersIdBookmarks
+		* @param request_options - Customize the options for this request
+		*/
+    getUsersIdBookmarks: (
+      id: string,
+      params: TwitterParams<getUsersIdBookmarks> = {},
+      request_options?: Partial<RequestOptions>
+    ): TwitterPaginatedResponse<TwitterResponse<getUsersIdBookmarks>> =>
+      paginate<TwitterResponse<getUsersIdBookmarks>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/users/${id}/bookmarks`,
+        params,
+        method: "GET",
+      }),
+
+    /**
+		* Add Tweet to Bookmarks
+		*
+
+		* Adds a Tweet (ID in the body) to the requesting user's (in the path) bookmarks
+		* @param id - The ID of the user for whom to add bookmarks
+		* @param request_body - The request_body for postUsersIdBookmarks
+		* @param request_options - Customize the options for this request
+		*/
+    postUsersIdBookmarks: (
+      id: string,
+      request_body: TwitterBody<postUsersIdBookmarks>,
+      request_options?: Partial<RequestOptions>
+    ): Promise<TwitterResponse<postUsersIdBookmarks>> =>
+      rest<TwitterResponse<postUsersIdBookmarks>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/users/${id}/bookmarks`,
+        request_body,
+        method: "POST",
+      }),
+
+    /**
+		* Remove a bookmarked Tweet
+		*
+
+		* Removes a Tweet from the requesting user's bookmarked Tweets.
+		* @param id - The ID of the user whose bookmark is to be removed.
+		* @param tweet_id - The ID of the tweet that the user is removing from bookmarks
+		* @param request_options - Customize the options for this request
+		*/
+    usersIdBookmarksDelete: (
+      id: string,
+      tweet_id: string,
+      request_options?: Partial<RequestOptions>
+    ): Promise<TwitterResponse<usersIdBookmarksDelete>> =>
+      rest<TwitterResponse<usersIdBookmarksDelete>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/users/${id}/bookmarks/${tweet_id}`,
+        method: "DELETE",
+      }),
+  };
   /**
    * Compliance
    *
