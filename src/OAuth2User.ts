@@ -4,7 +4,7 @@
 import crypto from "crypto";
 import { buildQueryString, basicAuthHeader } from "./utils";
 import { AuthClient, AuthHeader } from "./types";
-import { rest } from "./request";
+import { RequestOptions, rest } from "./request";
 
 export type OAuth2Scopes =
   | "tweet.read"
@@ -22,13 +22,16 @@ export type OAuth2Scopes =
   | "list.read"
   | "list.write"
   | "block.read"
-  | "block.write";
+  | "block.write"
+  | "bookmark.read"
+  | "bookmark.write";
 
 export type OAuth2UserOptions = {
   client_id: string;
   client_secret: string;
   callback: string;
   scopes: OAuth2Scopes[];
+  request_options?: Partial<RequestOptions>;
 };
 
 function sha256(buffer: string) {
@@ -59,15 +62,16 @@ export class OAuth2User implements AuthClient {
   async refreshAccessToken() {
     const refresh_token = this.refresh_token;
     const credentials = this.#configuration;
-    const params = {
-      grant_type: "refresh_token",
-      refresh_token: refresh_token,
-    };
     const data = await rest({
+      ...this.#configuration.request_options,
       endpoint: `/2/oauth2/token`,
-      params: params,
+      params: {
+        grant_type: "refresh_token",
+        refresh_token,
+      },
       method: "POST",
       headers: {
+        ...this.#configuration.request_options?.headers,
         "Content-type": "application/x-www-form-urlencoded",
         Authorization: basicAuthHeader(
           credentials.client_id,
@@ -106,10 +110,12 @@ export class OAuth2User implements AuthClient {
       redirect_uri: credentials.callback,
     };
     const data = await rest({
+      ...this.#configuration.request_options,
       endpoint: `/2/oauth2/token`,
       params: params,
       method: "POST",
       headers: {
+        ...this.#configuration.request_options?.headers,
         "Content-type": "application/x-www-form-urlencoded",
         Authorization: basicAuthHeader(
           credentials.client_id,
@@ -134,10 +140,12 @@ export class OAuth2User implements AuthClient {
       client_id: configuration.client_id,
     };
     return rest({
+      ...this.#configuration.request_options,
       endpoint: `/2/oauth2/revoke`,
       params: params,
       method: "POST",
       headers: {
+        ...this.#configuration.request_options?.headers,
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: basicAuthHeader(
           credentials.client_id,
