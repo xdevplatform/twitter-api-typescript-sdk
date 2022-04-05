@@ -27,6 +27,7 @@ async function fetchWithRetries(
   const res = await fetch(url, init);
   if (res.status === 429 && max_retries > 0) {
     const rateLimitReset = Number(res.headers.get("x-rate-limit-reset"));
+    const rateLimitRemaining = Number(res.headers.get("x-rate-limit-remaining"));
     const timeTillReset = rateLimitReset * 1000 - Date.now();
     let timeToWait = 0;
     if (rateLimitRemaining == 0)
