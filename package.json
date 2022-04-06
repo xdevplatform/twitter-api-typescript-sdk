@@ -16,13 +16,13 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@types/node-fetch": "^2.6.1",
     "node-fetch": "^2.6.1"
   },
   "engines": {
     "node": ">=14"
   },
   "devDependencies": {
+    "@types/node-fetch": "^2.6.1",
     "@types/jest": "^27.4.1",
     "jest": "^27.5.1",
     "nock": "^13.2.4",
