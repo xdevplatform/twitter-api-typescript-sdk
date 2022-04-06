@@ -1,7 +1,8 @@
 // Copyright 2021 Twitter, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-import fetch, { RequestInfo, RequestInit, Response } from "node-fetch";
+import fetch from "node-fetch";
+import type { RequestInfo, RequestInit, Response } from "node-fetch";
 import { buildQueryString } from "./utils";
 import {
   AuthClient,
