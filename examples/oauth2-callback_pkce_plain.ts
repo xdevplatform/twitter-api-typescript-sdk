@@ -23,9 +23,7 @@ const STATE = "my-state";
 app.get("/callback", async function (req, res) {
   try {
     const { code, state } = req.query;
-    if (state !== STATE) {
-      return res.status(500).send("State isn't matching");
-    }
+    if (state !== STATE) return res.status(500).send("State isn't matching");
     await authClient.requestAccessToken(code as string);
     res.redirect("/tweets");
   } catch (error) {
@@ -53,8 +51,6 @@ app.get("/tweets", async function (req, res) {
 
 app.get("/revoke", async function (req, res) {
   try {
-    const refresh_token = authClient.refresh_token;
-    if (!refresh_token) return res.send("No refresh_token found");
     const response = await authClient.revokeAccessToken();
     res.send(response);
   } catch (error) {

@@ -11,9 +11,8 @@ const app = express();
 
 const authClient = new auth.OAuth2User({
   client_id: process.env.CLIENT_ID as string,
-  client_secret: process.env.CLIENT_SECRET as string,
   callback: "http://127.0.0.1:3000/callback",
-  scopes: ["tweet.read", "users.read"],
+  scopes: ["tweet.read", "users.read", "offline.access"],
 });
 
 const client = new Client(authClient);
@@ -39,11 +38,6 @@ app.get("/login", async function (req, res) {
   res.redirect(authUrl);
 });
 
-app.get("/tweets", async function (req, res) {
-  const tweets = await client.tweets.findTweetById("20");
-  res.send(tweets.data);
-});
-
 app.get("/revoke", async function (req, res) {
   try {
     const response = await authClient.revokeAccessToken();
@@ -53,7 +47,19 @@ app.get("/revoke", async function (req, res) {
   }
 });
 
+app.get("/tweets", async function (req, res) {
+  const tweets = await client.tweets.findTweetById("20");
+  res.send(tweets.data);
+});
 
+app.get("/refresh", async function (req, res) {
+  try {
+    await authClient.refreshAccessToken();
+    res.send("Refreshed Access Token");
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 app.listen(3000, () => {
   console.log(`Go here to login: http://127.0.0.1:3000/login`);
