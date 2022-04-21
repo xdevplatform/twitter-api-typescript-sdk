@@ -1,8 +1,8 @@
 // Copyright 2021 Twitter, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-type SuccessStatus = 200;
-type ResponseType = "application/json";
+export type SuccessStatus = 200 | 201;
+export type ResponseType = "application/json";
 
 export interface AuthHeader {
   Authorization: string;
@@ -33,16 +33,20 @@ export type UnionToIntersection<U> = (
   ? I
   : never;
 
+export type GetSuccess<T> = {
+  [K in SuccessStatus & keyof T]: GetContent<T[K]>;
+}[SuccessStatus & keyof T];
+
 export type TwitterResponse<T> = UnionToIntersection<ExtractTwitterResponse<T>>;
 
-export type ExtractTwitterResponse<T> = "responses" extends keyof T
-  ? SuccessStatus extends keyof T["responses"]
-    ? "content" extends keyof T["responses"][SuccessStatus]
-      ? ResponseType extends keyof T["responses"][SuccessStatus]["content"]
-        ? T["responses"][SuccessStatus]["content"][ResponseType]
-        : never
-      : never
+export type GetContent<T> = "content" extends keyof T
+  ? ResponseType extends keyof T["content"]
+    ? T["content"][ResponseType]
     : never
+  : never;
+
+export type ExtractTwitterResponse<T> = "responses" extends keyof T
+  ? GetSuccess<T["responses"]>
   : never;
 
 export type TwitterParams<T> = "parameters" extends keyof T
