@@ -46,10 +46,11 @@ export async function request({
   request_body,
   method,
   max_retries,
-  base_url: baseUrl = "https://api.twitter.com",
+  base_url = "https://api.twitter.com",
+  headers,
   ...options
 }: RequestOptions): Promise<Response> {
-  const url = new URL(baseUrl + endpoint);
+  const url = new URL(base_url + endpoint);
   url.search = buildQueryString(query);
   const isPost = method === "POST" && !!request_body;
   const authHeader = auth
@@ -58,17 +59,20 @@ export async function request({
   const response = await fetchWithRetries(
     url.toString(),
     {
-      ...options,
       headers: {
-        ...options.headers,
-        "User-Agent": `twitter-api-typescript-sdk/1.0.3`,
+        "User-Agent": `twitter-api-typescript-sdk/1.0.4`,
         ...(isPost
           ? { "Content-Type": "application/json; charset=utf-8" }
           : undefined),
         ...authHeader,
+        ...headers,
       },
       method,
       body: isPost ? JSON.stringify(request_body) : undefined,
+      // Timeout if you don't see any data for 60 seconds
+      // https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data
+      timeout: 60000,
+      ...options,
     },
     max_retries
   );
