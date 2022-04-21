@@ -26,13 +26,30 @@ export type OAuth2Scopes =
   | "bookmark.read"
   | "bookmark.write";
 
-export type OAuth2UserOptions = {
+export interface OAuth2UserOptions {
   client_id: string;
-  client_secret: string;
+  client_secret?: string;
   callback: string;
   scopes: OAuth2Scopes[];
   request_options?: Partial<RequestOptions>;
-};
+}
+
+export type GenerateAuthUrlOptions =
+  | {
+      state: string;
+      code_challenge_method: "s256";
+    }
+  | {
+      state: string;
+      code_challenge: string;
+      code_challenge_method?: "plain";
+    };
+
+export interface RevokeAccessTokenParams {
+  token_type_hint: string;
+  token: string;
+  client_id: string;
+}
 
 function sha256(buffer: string) {
   return crypto.createHash("sha256").update(buffer).digest();
@@ -46,42 +63,64 @@ function base64URLEncode(str: Buffer) {
     .replace(/=/g, "");
 }
 
+interface RevokeAccessTokenResponse {
+  revoked: boolean;
+}
+
+/**
+ * Twitter OAuth2 Authentication Client
+ *
+ * TypeScript Authentication Client for use with the Twitter API OAuth2
+ *
+ */
 export class OAuth2User implements AuthClient {
   #access_token?: string;
   token_type?: string;
   expires_at?: Date;
   scope?: string;
   refresh_token?: string;
-  #configuration: OAuth2UserOptions;
+  #options: OAuth2UserOptions;
   #code_verifier?: string;
   #code_challenge?: string;
-  constructor(configuration: OAuth2UserOptions) {
-    this.#configuration = configuration;
+  constructor(options: OAuth2UserOptions) {
+    this.#options = options;
   }
 
-  async refreshAccessToken() {
+  /**
+   * Refresh the access token
+   */
+  async refreshAccessToken(): Promise<void> {
     const refresh_token = this.refresh_token;
-    const credentials = this.#configuration;
+    const { client_id, client_secret, request_options } = this.#options;
+    if (!client_id) {
+      throw new Error("client_id is required");
+    }
+    if (!refresh_token) {
+      throw new Error("refresh_token is required");
+    }
     const data = await rest({
-      ...this.#configuration.request_options,
+      ...request_options,
       endpoint: `/2/oauth2/token`,
       params: {
+        client_id,
         grant_type: "refresh_token",
         refresh_token,
       },
       method: "POST",
       headers: {
-        ...this.#configuration.request_options?.headers,
+        ...request_options?.headers,
         "Content-type": "application/x-www-form-urlencoded",
-        Authorization: basicAuthHeader(
-          credentials.client_id,
-          credentials.client_secret
-        ),
+        ...(!!client_secret && {
+          Authorization: basicAuthHeader(client_id, client_secret),
+        }),
       },
     });
     this.updateToken(data);
   }
 
+  /**
+   * Update token information
+   */
   updateToken(data: Record<string, any>) {
     this.refresh_token = data.refresh_token;
     this.#access_token = data.access_token;
@@ -90,7 +129,10 @@ export class OAuth2User implements AuthClient {
     this.scope = data.scope;
   }
 
-  isAccessTokenExpired() {
+  /**
+   * Check if an access token is expired
+   */
+  isAccessTokenExpired(): boolean {
     const refresh_token = this.refresh_token;
     const expires_at = this.expires_at;
     return (
@@ -99,92 +141,103 @@ export class OAuth2User implements AuthClient {
     );
   }
 
+  /**
+   * Request an access token
+   */
   async requestAccessToken(code?: string): Promise<void> {
-    const credentials = this.#configuration;
-    const code_verifier = this.#code_verifier || this.#code_challenge;
+    const { client_id, client_secret, callback, request_options } =
+      this.#options;
+    const code_verifier = this.#code_verifier;
+    if (!client_id) {
+      throw new Error("client_id is required");
+    }
+    if (!callback) {
+      throw new Error("callback is required");
+    }
     const params = {
       code,
       grant_type: "authorization_code",
-      code_verifier: code_verifier,
-      client_id: credentials.client_id,
-      redirect_uri: credentials.callback,
+      code_verifier,
+      client_id,
+      redirect_uri: callback,
     };
     const data = await rest({
-      ...this.#configuration.request_options,
+      ...request_options,
       endpoint: `/2/oauth2/token`,
-      params: params,
+      params,
       method: "POST",
       headers: {
-        ...this.#configuration.request_options?.headers,
+        ...request_options?.headers,
         "Content-type": "application/x-www-form-urlencoded",
-        Authorization: basicAuthHeader(
-          credentials.client_id,
-          credentials.client_secret
-        ),
+        ...(!!client_secret && {
+          Authorization: basicAuthHeader(client_id, client_secret),
+        }),
       },
     });
     this.updateToken(data);
   }
 
-  async revokeAccessToken(): Promise<any> {
-    const credentials = this.#configuration;
+  /**
+   * Revoke an access token
+   */
+  async revokeAccessToken(): Promise<RevokeAccessTokenResponse> {
+    const { client_id, client_secret, request_options } = this.#options;
     const access_token = this.#access_token;
     const refresh_token = this.refresh_token;
-    const configuration = this.#configuration;
-    if (!access_token || !refresh_token)
-      throw new Error("No access_token or refresh_token found");
-    const useAccessToken = !!this.#access_token;
-    const params = {
-      token_type_hint: useAccessToken ? "access_token" : "refresh_token",
-      token: useAccessToken ? access_token : refresh_token,
-      client_id: configuration.client_id,
-    };
+    if (!client_id) {
+      throw new Error("client_id is required");
+    }
+    let params: RevokeAccessTokenParams;
+    if (!!access_token) {
+      params = {
+        token_type_hint: "access_token",
+        token: access_token,
+        client_id,
+      };
+    } else if (!!refresh_token) {
+      params = {
+        token_type_hint: "refresh_token",
+        token: refresh_token,
+        client_id,
+      };
+    } else {
+      throw new Error("access_token or refresh_token required");
+    }
     return rest({
-      ...this.#configuration.request_options,
+      ...request_options,
       endpoint: `/2/oauth2/revoke`,
-      params: params,
+      params,
       method: "POST",
       headers: {
-        ...this.#configuration.request_options?.headers,
+        ...request_options?.headers,
         "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: basicAuthHeader(
-          credentials.client_id,
-          credentials.client_secret
-        ),
+        ...(!!client_secret && {
+          Authorization: basicAuthHeader(client_id, client_secret),
+        }),
       },
     });
   }
 
-  generateAuthURL(
-    options:
-      | {
-          state: string;
-          code_challenge: string;
-          code_challenge_method?: "plain";
-        }
-      | {
-          state: string;
-          code_challenge_method: "s256";
-        }
-  ): string {
-    const credentials = this.#configuration;
-    if (!("callback" in credentials))
-      throw new Error("You need to provide a callback and scopes");
+  generateAuthURL(options: GenerateAuthUrlOptions): string {
+    const { client_id, callback, scopes } = this.#options;
+    if (!callback) throw new Error("callback required");
+    if (!scopes) throw new Error("scopes required");
     if (options.code_challenge_method === "s256") {
       const code_verifier = base64URLEncode(crypto.randomBytes(32));
       this.#code_verifier = code_verifier;
       this.#code_challenge = base64URLEncode(sha256(code_verifier));
     } else {
       this.#code_challenge = options.code_challenge;
+      this.#code_verifier = options.code_challenge;
     }
     const code_challenge = this.#code_challenge;
     const url = new URL("https://twitter.com/i/oauth2/authorize");
     url.search = buildQueryString({
       ...options,
-      client_id: credentials.client_id,
-      scope: credentials.scopes.join(" "),
+      client_id,
+      scope: scopes.join(" "),
       response_type: "code",
-      redirect_uri: credentials.callback,
+      redirect_uri: callback,
       code_challenge_method: options.code_challenge_method || "plain",
       code_challenge,
     });
