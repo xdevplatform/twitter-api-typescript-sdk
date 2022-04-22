@@ -128,7 +128,7 @@ export class OAuth2User implements AuthClient {
   /**
    * Update token information
    */
-  updateToken(data: Record<string, any>) {
+  updateToken(data: Record<string, any>): void {
     this.refresh_token = data.refresh_token;
     this.#access_token = data.access_token;
     this.token_type = data.token_type;
