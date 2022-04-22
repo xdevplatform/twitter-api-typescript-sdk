@@ -27,21 +27,31 @@ export type OAuth2Scopes =
   | "bookmark.write";
 
 export interface OAuth2UserOptions {
+  /** Can be found in the developer portal under the header "Client ID". */
   client_id: string;
+  /** If you have selected an App type that is a confidential client you will be provided with a “Client Secret” under “Client ID” in your App’s keys and tokens section. */
   client_secret?: string;
+  /**Your callback URL. This value must correspond to one of the Callback URLs defined in your App’s settings. For OAuth 2.0, you will need to have exact match validation for your callback URL. */
   callback: string;
+  /** Scopes allow you to set granular access for your App so that your App only has the permissions that it needs. To learn more about what scopes map to what endpoints, view our {@link https://developer.twitter.com/en/docs/authentication/guides/v2-authentication-mapping authentication mapping guide}. */
   scopes: OAuth2Scopes[];
+  /** Overwrite request options for all endpoints */
   request_options?: Partial<RequestOptions>;
 }
 
 export type GenerateAuthUrlOptions =
   | {
+      /** A random string you provide to verify against CSRF attacks.  The length of this string can be up to 500 characters. */
       state: string;
+      /** Specifies the method you are using to make a request (S256 OR plain). */
       code_challenge_method: "s256";
     }
   | {
+      /** A random string you provide to verify against CSRF attacks.  The length of this string can be up to 500 characters. */
       state: string;
+      /** A PKCE parameter, a random secret for each request you make. */
       code_challenge: string;
+      /** Specifies the method you are using to make a request (S256 OR plain). */
       code_challenge_method?: "plain";
     };
 
@@ -69,9 +79,6 @@ interface RevokeAccessTokenResponse {
 
 /**
  * Twitter OAuth2 Authentication Client
- *
- * TypeScript Authentication Client for use with the Twitter API OAuth2
- *
  */
 export class OAuth2User implements AuthClient {
   #access_token?: string;
