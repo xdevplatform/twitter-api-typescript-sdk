@@ -78,19 +78,19 @@ interface RevokeAccessTokenResponse {
 }
 
 interface GetTokenResponse {
+  /** Allows an application to obtain a new access token without prompting the user via the refresh token flow. */
   refresh_token?: string;
+  /** Access tokens are the token that applications use to make API requests on behalf of a user.  */
   access_token?: string;
   token_type?: string;
   expires_in?: number;
+  /** Comma-separated list of scopes for the token  */
   scope?: string;
 }
 
-interface Token {
-  refresh_token?: string;
-  access_token?: string;
-  token_type?: string;
+interface Token extends Omit<GetTokenResponse, 'expires_in'> {
+  /** Date that the access_token will expire at.  */
   expires_at?: Date;
-  scope?: string;
 }
 
 function processTokenResponse(token: GetTokenResponse): Token {
