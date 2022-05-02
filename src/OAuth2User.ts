@@ -77,23 +77,37 @@ interface RevokeAccessTokenResponse {
   revoked: boolean;
 }
 
-interface TokenResponse {
-  refresh_token: string;
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  scope: string;
+interface GetTokenResponse {
+  refresh_token?: string;
+  access_token?: string;
+  token_type?: string;
+  expires_in?: number;
+  scope?: string;
+}
+
+interface Token {
+  refresh_token?: string;
+  access_token?: string;
+  token_type?: string;
+  expires_at?: Date;
+  scope?: string;
+}
+
+function processTokenResponse(token: GetTokenResponse): Token {
+  const { expires_in, ...rest } = token;
+  return {
+    ...rest,
+    ...(!!expires_in && {
+      expires_at: new Date(Date.now() + expires_in * 1000),
+    }),
+  };
 }
 
 /**
  * Twitter OAuth2 Authentication Client
  */
 export class OAuth2User implements AuthClient {
-  access_token?: string;
-  token_type?: string;
-  expires_at?: Date;
-  scope?: string;
-  refresh_token?: string;
+  token?: Token;
   #options: OAuth2UserOptions;
   #code_verifier?: string;
   #code_challenge?: string;
@@ -104,8 +118,8 @@ export class OAuth2User implements AuthClient {
   /**
    * Refresh the access token
    */
-  async refreshAccessToken(): Promise<void> {
-    const refresh_token = this.refresh_token;
+  async refreshAccessToken(): Promise<{ token: Token }> {
+    const refresh_token = this.token?.refresh_token;
     const { client_id, client_secret, request_options } = this.#options;
     if (!client_id) {
       throw new Error("client_id is required");
@@ -113,7 +127,7 @@ export class OAuth2User implements AuthClient {
     if (!refresh_token) {
       throw new Error("refresh_token is required");
     }
-    const data = await rest<TokenResponse>({
+    const data = await rest<GetTokenResponse>({
       ...request_options,
       endpoint: `/2/oauth2/token`,
       params: {
@@ -130,26 +144,17 @@ export class OAuth2User implements AuthClient {
         }),
       },
     });
-    this.updateToken(data);
-  }
-
-  /**
-   * Update token information
-   */
-  updateToken(data: TokenResponse): void {
-    this.refresh_token = data.refresh_token;
-    this.access_token = data.access_token;
-    this.token_type = data.token_type;
-    this.expires_at = new Date(Date.now() + data.expires_in * 1000);
-    this.scope = data.scope;
+    const token = processTokenResponse(data);
+    this.token = token;
+    return { token };
   }
 
   /**
    * Check if an access token is expired
    */
   isAccessTokenExpired(): boolean {
-    const refresh_token = this.refresh_token;
-    const expires_at = this.expires_at;
+    const refresh_token = this.token?.refresh_token;
+    const expires_at = this.token?.expires_at;
     return (
       !!refresh_token &&
       (!expires_at || expires_at <= new Date(Date.now() + 1000))
@@ -159,7 +164,7 @@ export class OAuth2User implements AuthClient {
   /**
    * Request an access token
    */
-  async requestAccessToken(code?: string): Promise<void> {
+  async requestAccessToken(code?: string): Promise<{ token: Token }> {
     const { client_id, client_secret, callback, request_options } =
       this.#options;
     const code_verifier = this.#code_verifier;
@@ -176,7 +181,7 @@ export class OAuth2User implements AuthClient {
       client_id,
       redirect_uri: callback,
     };
-    const data = await rest<TokenResponse>({
+    const data = await rest<GetTokenResponse>({
       ...request_options,
       endpoint: `/2/oauth2/token`,
       params,
@@ -189,7 +194,9 @@ export class OAuth2User implements AuthClient {
         }),
       },
     });
-    this.updateToken(data);
+    const token = processTokenResponse(data);
+    this.token = token;
+    return { token };
   }
 
   /**
@@ -197,8 +204,8 @@ export class OAuth2User implements AuthClient {
    */
   async revokeAccessToken(): Promise<RevokeAccessTokenResponse> {
     const { client_id, client_secret, request_options } = this.#options;
-    const access_token = this.access_token;
-    const refresh_token = this.refresh_token;
+    const access_token = this.token?.access_token;
+    const refresh_token = this.token?.refresh_token;
     if (!client_id) {
       throw new Error("client_id is required");
     }
@@ -260,10 +267,10 @@ export class OAuth2User implements AuthClient {
   }
 
   async getAuthHeader(): Promise<AuthHeader> {
-    if (!this.access_token) throw new Error("access_token is required");
+    if (!this.token?.access_token) throw new Error("access_token is required");
     if (this.isAccessTokenExpired()) await this.refreshAccessToken();
     return {
-      Authorization: `Bearer ${this.access_token}`,
+      Authorization: `Bearer ${this.token.access_token}`,
     };
   }
 }
