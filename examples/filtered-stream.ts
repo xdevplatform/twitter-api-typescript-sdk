@@ -16,9 +16,6 @@ async function main() {
         { value: "meme", tag: "funny things" },
         { value: "meme has:images" },
       ],
-    },
-    {
-      dry_run: true,
     }
   );
   const rules = await client.tweets.getRules();
