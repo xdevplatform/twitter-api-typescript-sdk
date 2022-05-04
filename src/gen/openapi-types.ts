@@ -345,6 +345,7 @@ export interface components {
        */
       description?: string;
       images?: components["schemas"]["URLImage"][];
+      media_key?: components["schemas"]["MediaKey"];
     };
     /** @description Represent the portion of text recognized as a URL, and its start and end position within the text. */
     UrlEntity: components["schemas"]["EntityIndicesInclusiveExclusive"] &
@@ -841,6 +842,18 @@ export interface components {
       /** Format: uri */
       preview_image_url?: string;
       duration_ms?: number;
+      /** @description An array of all available variants of the media */
+      variants?: {
+        /** @description The bit rate of the media */
+        bit_rate?: number;
+        /** @description The content type of the media */
+        content_type?: string;
+        /**
+         * Format: uri
+         * @description The url to the media
+         */
+        url?: string;
+      }[];
       /** @description Engagement metrics for the Media at the time of the request. */
       public_metrics?: {
         /**
@@ -947,6 +960,18 @@ export interface components {
     AnimatedGif: components["schemas"]["Media"] & {
       /** Format: uri */
       preview_image_url?: string;
+      /** @description An array of all available variants of the media */
+      variants?: {
+        /** @description The bit rate of the media */
+        bit_rate?: number;
+        /** @description The content type of the media */
+        content_type?: string;
+        /**
+         * Format: uri
+         * @description The url to the media
+         */
+        url?: string;
+      }[];
     };
     /** @description The Media Key identifier for this attachment. */
     MediaKey: string;
@@ -1159,6 +1184,13 @@ export interface components {
     RulesResponseMetadata: {
       sent: string;
       summary?: components["schemas"]["RulesRequestSummary"];
+      /** @description This parameter is used to get the next 'page' of results. The value used with the parameter is pulled directly from the response provided by the API, and should not be modified. */
+      next_token?: string;
+      /**
+       * Format: int32
+       * @description Number of Rules in result set
+       */
+      result_count?: number;
     };
     RulesRequestSummary:
       | {
@@ -1439,6 +1471,13 @@ export interface components {
     MultiComplianceJobResponse: {
       data?: components["schemas"]["ComplianceJob"][];
       errors?: components["schemas"]["Problem"][];
+      meta?: {
+        /**
+         * Format: int32
+         * @description Number of compliance jobs returned
+         */
+        result_count?: number;
+      };
     };
     Space: {
       id: components["schemas"]["SpaceID"];
@@ -1644,6 +1683,7 @@ export interface components {
       | "organic_metrics"
       | "promoted_metrics"
       | "alt_text"
+      | "variants"
     )[];
     /** @description A comma separated list of Place fields to display. */
     PlaceFieldsParameter: (
@@ -2488,6 +2528,8 @@ export interface operations {
       query: {
         /** The maximum number of results to be returned. */
         max_results?: number;
+        /** The set of entities to exclude (e.g. 'replies' or 'retweets') */
+        exclude?: components["parameters"]["TweetTypeExcludesRequestParameter"];
         /** A comma separated list of fields to expand. */
         expansions?: components["parameters"]["TweetExpansionsParameter"];
         /** A comma separated list of Tweet fields to display. */

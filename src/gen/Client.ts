@@ -957,8 +957,8 @@ export class Client {
     getRules: (
       params: TwitterParams<getRules> = {},
       request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<getRules>> =>
-      rest<TwitterResponse<getRules>>({
+    ): TwitterPaginatedResponse<TwitterResponse<getRules>> =>
+      paginate<TwitterResponse<getRules>>({
         auth: this.#auth,
         ...this.#defaultRequestOptions,
         ...request_options,
