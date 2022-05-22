@@ -145,6 +145,10 @@ export interface paths {
     /** Full open api spec in JSON format. (See https://github.com/OAI/OpenAPI-Specification/blob/master/README.md) */
     get: operations["getOpenApiSpec"];
   };
+  "/2/users/{id}/timelines/reverse_chronological": {
+    /** Returns Tweet objects that appears in the provided User ID's home timeline */
+    get: operations["usersIdTimeline"];
+  };
   "/2/users/{id}/tweets": {
     /** Returns a list of Tweets authored by the provided User ID */
     get: operations["usersIdTweets"];
@@ -2795,6 +2799,52 @@ export interface operations {
       };
     };
   };
+  /** Returns Tweet objects that appears in the provided User ID's home timeline */
+  usersIdTimeline: {
+    parameters: {
+      path: {
+        /** The ID of the User to list Reverse Chronological Timeline Tweets of */
+        id: components["schemas"]["UserID"];
+      };
+      query: {
+        /** The minimum Tweet ID to be included in the result set. This parameter takes precedence over start_time if both are specified. */
+        since_id?: components["parameters"]["SinceIdRequestParameter"];
+        /** The maximum Tweet ID to be included in the result set. This parameter takes precedence over end_time if both are specified. */
+        until_id?: components["parameters"]["UntilIdRequestParameter"];
+        /** The maximum number of results */
+        max_results?: components["parameters"]["MaxResultsRequestParameter"];
+        /** The set of entities to exclude (e.g. 'replies' or 'retweets') */
+        exclude?: components["parameters"]["TweetTypeExcludesRequestParameter"];
+        /** This parameter is used to get the next 'page' of results. */
+        pagination_token?: components["parameters"]["PaginationTokenRequestParameter"];
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Tweets will be provided. The since_id parameter takes precedence if it is also specified. */
+        start_time?: components["parameters"]["StartTimeRequestParameter"];
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Tweets will be provided. The until_id parameter takes precedence if it is also specified. */
+        end_time?: components["parameters"]["EndTimeRequestParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["TweetExpansionsParameter"];
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of Place fields to display. */
+        "place.fields"?: components["parameters"]["PlaceFieldsParameter"];
+        /** A comma separated list of Poll fields to display. */
+        "poll.fields"?: components["parameters"]["PollFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request was successful */
+      200: {
+        content: {
+          "application/json": components["schemas"]["GenericTweetsTimelineResponse"];
+        };
+      };
+      default: components["responses"]["HttpErrorResponse"];
+    };
+  };
   /** Returns a list of Tweets authored by the provided User ID */
   usersIdTweets: {
     parameters: {
@@ -3616,6 +3666,7 @@ export type getRules = operations['getRules']
 export type addOrDeleteRules = operations['addOrDeleteRules']
 export type sampleStream = operations['sampleStream']
 export type getOpenApiSpec = operations['getOpenApiSpec']
+export type usersIdTimeline = operations['usersIdTimeline']
 export type usersIdTweets = operations['usersIdTweets']
 export type usersIdMentions = operations['usersIdMentions']
 export type usersIdLike = operations['usersIdLike']

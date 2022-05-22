@@ -60,7 +60,7 @@ export async function request({
     url.toString(),
     {
       headers: {
-        "User-Agent": `twitter-api-typescript-sdk/1.0.6`,
+        "User-Agent": `twitter-api-typescript-sdk/1.0.7`,
         ...(isPost
           ? { "Content-Type": "application/json; charset=utf-8" }
           : undefined),
