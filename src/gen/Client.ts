@@ -56,6 +56,7 @@ import {
   addOrDeleteRules,
   sampleStream,
   getOpenApiSpec,
+  usersIdTimeline,
   usersIdTweets,
   usersIdMentions,
   usersIdLike,
@@ -1008,6 +1009,29 @@ export class Client {
         ...this.#defaultRequestOptions,
         ...request_options,
         endpoint: `/2/tweets/sample/stream`,
+        params,
+        method: "GET",
+      }),
+
+    /**
+		* User home timeline by User ID
+		*
+
+		* Returns Tweet objects that appears in the provided User ID's home timeline
+		* @param id - The ID of the User to list Reverse Chronological Timeline Tweets of
+		* @param params - The params for usersIdTimeline
+		* @param request_options - Customize the options for this request
+		*/
+    usersIdTimeline: (
+      id: string,
+      params: TwitterParams<usersIdTimeline> = {},
+      request_options?: Partial<RequestOptions>
+    ): TwitterPaginatedResponse<TwitterResponse<usersIdTimeline>> =>
+      paginate<TwitterResponse<usersIdTimeline>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/users/${id}/timelines/reverse_chronological`,
         params,
         method: "GET",
       }),
