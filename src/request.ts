@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import fetch from "node-fetch";
-import type { RequestInfo, RequestInit, Response } from "node-fetch";
+import type { RequestInfo, RequestInit, Response, Headers } from "node-fetch";
 import { buildQueryString } from "./utils";
 import {
   AuthClient,
@@ -52,6 +52,25 @@ async function fetchWithRetries(
   return res;
 }
 
+class TwitterResponseError extends Error {
+  status: number;
+  statusText: string;
+  headers: Record<string, any>;
+  error: Record<string, any>;
+  constructor(
+    status: number,
+    statusText: string,
+    headers: Headers,
+    error: Record<string, any>
+  ) {
+    super();
+    this.status = status;
+    this.statusText = statusText;
+    this.headers = Object.fromEntries(headers);
+    this.error = error;
+  }
+}
+
 export async function request({
   auth,
   endpoint,
@@ -90,7 +109,13 @@ export async function request({
     max_retries
   );
   if (!response.ok) {
-    throw new Error(`${response.status}, ${response.statusText}`);
+    const error = await response.json();
+    throw new TwitterResponseError(
+      response.status,
+      response.statusText,
+      response.headers,
+      error
+    );
   }
   return response;
 }
