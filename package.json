@@ -16,14 +16,15 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "abort-controller": "^3.0.0",
     "node-fetch": "^2.6.1"
   },
   "engines": {
     "node": ">=14"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.6.1",
     "@types/jest": "^27.4.1",
+    "@types/node-fetch": "^2.6.1",
     "jest": "^27.5.1",
     "nock": "^13.2.4",
     "ts-jest": "^27.0.3",

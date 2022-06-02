@@ -9,6 +9,19 @@ import {
   TwitterNextToken,
   TwitterPaginatedResponse,
 } from "./types";
+import type { AbortController as AbortControllerPolyfill } from "abort-controller";
+
+let AbortController:
+  | typeof globalThis.AbortController
+  | typeof AbortControllerPolyfill;
+
+if (!globalThis.AbortController) {
+  AbortController = require("abort-controller");
+} else {
+  // https://nodejs.org/api/globals.html#class-abortcontroller
+  // AbortController available in v14.17.0 as experimental
+  AbortController = globalThis.AbortController;
+}
 
 export interface RequestOptions extends Omit<RequestInit, "body"> {
   auth?: AuthClient;
@@ -83,17 +96,25 @@ export async function request({
 }
 
 export async function* stream<T>(args: RequestOptions): AsyncGenerator<T> {
-  const { body } = await request(args);
+  const controller = new AbortController();
+  const { body } = await request({
+    signal: controller.signal as RequestInit["signal"],
+    ...args,
+  });
   if (body === null) throw new Error("No response returned from stream");
   let buf = "";
-  for await (const chunk of body) {
-    buf += chunk.toString();
-    const lines = buf.split("\r\n");
-    for (const [i, line] of lines.entries()) {
-      if (i === lines.length - 1) {
-        buf = line;
-      } else if (line) yield JSON.parse(line);
+  try {
+    for await (const chunk of body) {
+      buf += chunk.toString();
+      const lines = buf.split("\r\n");
+      for (const [i, line] of lines.entries()) {
+        if (i === lines.length - 1) {
+          buf = line;
+        } else if (line) yield JSON.parse(line);
+      }
     }
+  } finally {
+    controller.abort();
   }
 }
 
