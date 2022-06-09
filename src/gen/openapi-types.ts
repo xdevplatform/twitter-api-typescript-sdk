@@ -489,6 +489,18 @@ export interface components {
          * @description Number of times this Tweet has been viewed.
          */
         impression_count?: number;
+
+        /**
+         * Format: int32
+         * @description Number of times a user clicks on a URL link or URL preview card in a Tweet.
+         */
+        url_link_clicks?: number;
+
+        /**
+         * Format: int32
+         * @description Number of times a user clicks the following portions of a Tweet - display name, user name, profile picture.
+         */
+        user_profile_clicks?: number;
       };
       /** @description Promoted nonpublic engagement metrics for the Tweet at the time of the request. */
       promoted_metrics?: {
