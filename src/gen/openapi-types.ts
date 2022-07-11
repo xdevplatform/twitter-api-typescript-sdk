@@ -339,7 +339,12 @@ export interface components {
      * @description Status of a compliance job.
      * @enum {string}
      */
-    ComplianceJobStatus: "created" | "in_progress" | "failed" | "complete";
+    ComplianceJobStatus:
+      | "created"
+      | "in_progress"
+      | "failed"
+      | "complete"
+      | "expired";
     /**
      * @description Type of compliance job to list.
      * @enum {string}
@@ -1014,7 +1019,7 @@ export interface components {
       components["schemas"]["MentionFields"];
     /** @description Represent the portion of text recognized as a User mention, and its start and end position within the text. */
     MentionFields: {
-      id: components["schemas"]["UserId"];
+      id?: components["schemas"]["UserId"];
       username: components["schemas"]["UserName"];
     };
     MuteUserMutationResponse: {

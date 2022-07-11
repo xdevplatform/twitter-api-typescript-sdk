@@ -13,7 +13,11 @@ describe("test v2 client", () => {
   });
 
   test("rest api call", () => {
-    nock("https://api.twitter.com")
+    nock("https://api.twitter.com", {
+      reqheaders: {
+        'User-Agent': /^twitter-api-typescript-sdk/
+      }
+    })
       .get("/2/tweets/20")
       .reply(200, { data: { id: "20", text: "just setting up my twttr" } });
     return client.tweets.findTweetById("20").then((tweet) =>
@@ -56,7 +60,7 @@ describe("test v2 client", () => {
 
     const pages = client.users.usersIdFollowers("TwitterDev");
 
-    const results = [];
+    const results: Awaited<ReturnType<typeof pages["then"]>>[] = [];
     for await (const test of pages) {
       results.push(test);
     }
