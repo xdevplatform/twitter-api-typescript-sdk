@@ -96,13 +96,23 @@ import {
 export class Client {
   #auth: AuthClient;
   #defaultRequestOptions?: Partial<RequestOptions>;
+  version: string;
+  twitterApiOpenApiVersion: string;
 
   constructor(
     auth: string | AuthClient,
     requestOptions?: Partial<RequestOptions>
   ) {
+    this.version = "1.1.0";
+    this.twitterApiOpenApiVersion = "2.45";
     this.#auth = typeof auth === "string" ? new OAuth2Bearer(auth) : auth;
-    this.#defaultRequestOptions = requestOptions;
+    this.#defaultRequestOptions = {
+      ...requestOptions,
+      headers: {
+        "User-Agent": "twitter-api-typescript-sdk/" + this.version,
+        ...requestOptions?.headers,
+      },
+    };
   }
 
   /**

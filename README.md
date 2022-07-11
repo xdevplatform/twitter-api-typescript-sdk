@@ -106,10 +106,21 @@ You can see various examples on how to use the authentication in [examples/](exa
 
 ## Getting Started
 
-Make sure you to turn on OAuth2 in your apps user authentication settings, and set the type of app to be a confidential client (Web App or Automated App or Bot).
+Make sure you turn on OAuth2 in your apps user authentication settings, and set the type of app to be either a confidential client or a public client.
 
-### Creating an Auth Client
+### Creating an public Auth Client
 
+```typescript
+const authClient = new auth.OAuth2User({
+  client_id: process.env.CLIENT_ID,
+  callback: "http://127.0.0.1:3000/callback",
+  scopes: ["tweet.read", "users.read", "offline.access"],
+});
+
+const client = new Client(authClient);
+```
+
+### Creating an confidential Auth Client
 ```typescript
 const authClient = new auth.OAuth2User({
   client_id: process.env.CLIENT_ID,
@@ -120,6 +131,7 @@ const authClient = new auth.OAuth2User({
 
 const client = new Client(authClient);
 ```
+
 
 ### Generating an Authentication URL
 
@@ -142,3 +154,43 @@ await authClient.requestAccessToken(code);
 ```typescript
 const response = await authClient.revokeAccessToken();
 ```
+
+## Contributing
+
+Note this is only for developers who want to contribute code to the SDK
+
+
+### Clone the Repository
+
+```
+git clone https://github.com/twitterdev/twitter-api-typescript-sdk
+```
+
+### Running the generation script
+
+Generating the SDK with the [latest OpenAPI spec](https://api.twitter.com/2/openapi.json). The version is any valid [SemVer](https://semver.org/) version
+
+```
+yarn generate 1.0.0
+```
+
+Generating the SDK with a local OpenAPI specification file.
+
+```
+yarn generate 1.0.0 --specFile ~/path/to/file/openapi.json
+```
+
+The files generated are put in the [src/gen](src/gen) directory, these files are not edited manually.
+
+### Building
+
+```
+yarn build
+```
+
+### Testing
+
+```
+yarn test
+```
+
