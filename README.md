@@ -36,7 +36,7 @@ For more information about authentication [go here](#authentication)
 
 ## Examples
 
-### Consuming a stream
+### Consuming a Stream
 
 ```typescript
 import { Client } from "twitter-api-sdk";
@@ -55,7 +55,7 @@ async function main() {
 main();
 ```
 
-### Getting a tweet
+### Getting a Tweet
 
 ```typescript
 import { Client } from "twitter-api-sdk";
@@ -108,7 +108,7 @@ You can see various examples on how to use the authentication in [examples/](exa
 
 Make sure you turn on OAuth2 in your apps user authentication settings, and set the type of app to be either a confidential client or a public client.
 
-### Creating an public Auth Client
+### Creating a Public Auth Client
 
 ```typescript
 const authClient = new auth.OAuth2User({
@@ -120,7 +120,7 @@ const authClient = new auth.OAuth2User({
 const client = new Client(authClient);
 ```
 
-### Creating an confidential Auth Client
+### Creating a Confidential Auth Client
 ```typescript
 const authClient = new auth.OAuth2User({
   client_id: process.env.CLIENT_ID,
@@ -141,7 +141,7 @@ const authUrl = authClient.generateAuthURL({
 });
 ```
 
-### Getting an Access Token
+### Requesting an Access Token
 
 Once the user has approved the OAuth flow, you will receive a `code` query parameter at the callback URL you specified.
 
@@ -166,7 +166,7 @@ Note this is only for developers who want to contribute code to the SDK
 git clone https://github.com/twitterdev/twitter-api-typescript-sdk
 ```
 
-### Running the generation script
+### Running the Generation Script
 
 Generating the SDK with the [latest OpenAPI spec](https://api.twitter.com/2/openapi.json). The version is any valid [SemVer](https://semver.org/) version
 
