@@ -14,10 +14,8 @@ Next, create a `.env` file in the example directory and populate the following v
 
 ```
 BEARER_TOKEN=my-bearer-token
-API_KEY=my-api-key
-API_SECRET_KEY=my-secret-key
-ACCESS_TOKEN=my-access-token
-ACCESS_TOKEN_SECRET=my-access-token-secret
+CLIENT_ID=my-client-id
+CLIENT_SECRET=my-client-secret
 ```
 
 Run the example with `ts-node`
