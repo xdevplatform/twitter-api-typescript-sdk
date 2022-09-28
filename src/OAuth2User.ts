@@ -88,7 +88,7 @@ interface GetTokenResponse {
   scope?: string;
 }
 
-interface Token extends Omit<GetTokenResponse, 'expires_in'> {
+export interface Token extends Omit<GetTokenResponse, 'expires_in'> {
   /** Date that the access_token will expire at.  */
   expires_at?: Date;
 }
@@ -111,8 +111,23 @@ export class OAuth2User implements AuthClient {
   #options: OAuth2UserOptions;
   #code_verifier?: string;
   #code_challenge?: string;
-  constructor(options: OAuth2UserOptions) {
+  #code_challenge_method?: string;
+  constructor(options: OAuth2UserOptions, generateUrlOptions?: GenerateAuthUrlOptions, token?: Token) {
     this.#options = options;
+    if(generateUrlOptions){
+      this.#code_challenge_method = generateUrlOptions.code_challenge_method;
+      if (generateUrlOptions.code_challenge_method === "s256") {
+        const code_verifier = base64URLEncode(crypto.randomBytes(32));
+        this.#code_verifier = code_verifier;
+        this.#code_challenge = base64URLEncode(sha256(code_verifier));
+      } else {
+        this.#code_challenge = generateUrlOptions.code_challenge;
+        this.#code_verifier = generateUrlOptions.code_challenge;
+      }
+    }
+    if(token){
+      this.token = token;
+    }
   }
 
   /**
@@ -133,6 +148,7 @@ export class OAuth2User implements AuthClient {
       params: {
         client_id,
         grant_type: "refresh_token",
+        code_verifier:this.#code_verifier,
         refresh_token,
       },
       method: "POST",
@@ -240,17 +256,21 @@ export class OAuth2User implements AuthClient {
     });
   }
 
-  generateAuthURL(options: GenerateAuthUrlOptions): string {
+  generateAuthURL(options?: GenerateAuthUrlOptions): string {
     const { client_id, callback, scopes } = this.#options;
     if (!callback) throw new Error("callback required");
     if (!scopes) throw new Error("scopes required");
-    if (options.code_challenge_method === "s256") {
+    if(options){
+      this.#code_challenge_method = options.code_challenge_method;
+      if(options.code_challenge_method !== "s256"){
+        this.#code_challenge = options.code_challenge;
+        this.#code_verifier = options.code_challenge;
+      }
+    }
+    if (this.#code_challenge_method === "s256") {
       const code_verifier = base64URLEncode(crypto.randomBytes(32));
       this.#code_verifier = code_verifier;
       this.#code_challenge = base64URLEncode(sha256(code_verifier));
-    } else {
-      this.#code_challenge = options.code_challenge;
-      this.#code_verifier = options.code_challenge;
     }
     const code_challenge = this.#code_challenge;
     const url = new URL("https://twitter.com/i/oauth2/authorize");
@@ -260,7 +280,7 @@ export class OAuth2User implements AuthClient {
       scope: scopes.join(" "),
       response_type: "code",
       redirect_uri: callback,
-      code_challenge_method: options.code_challenge_method || "plain",
+      code_challenge_method: this.#code_challenge_method || "plain",
       code_challenge,
     });
     return url.toString();
