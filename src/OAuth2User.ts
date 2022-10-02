@@ -37,6 +37,8 @@ export interface OAuth2UserOptions {
   scopes: OAuth2Scopes[];
   /** Overwrite request options for all endpoints */
   request_options?: Partial<RequestOptions>;
+  /** Set the auth token */
+  token?: Token;
 }
 
 export type GenerateAuthUrlOptions =
@@ -88,9 +90,9 @@ interface GetTokenResponse {
   scope?: string;
 }
 
-interface Token extends Omit<GetTokenResponse, 'expires_in'> {
+interface Token extends Omit<GetTokenResponse, "expires_in"> {
   /** Date that the access_token will expire at.  */
-  expires_at?: Date;
+  expires_at?: number;
 }
 
 function processTokenResponse(token: GetTokenResponse): Token {
@@ -98,7 +100,7 @@ function processTokenResponse(token: GetTokenResponse): Token {
   return {
     ...rest,
     ...(!!expires_in && {
-      expires_at: new Date(Date.now() + expires_in * 1000),
+      expires_at: Date.now() + expires_in * 1000,
     }),
   };
 }
@@ -112,7 +114,9 @@ export class OAuth2User implements AuthClient {
   #code_verifier?: string;
   #code_challenge?: string;
   constructor(options: OAuth2UserOptions) {
-    this.#options = options;
+    const { token, ...defaultOptions } = options;
+    this.#options = defaultOptions;
+    this.token = token;
   }
 
   /**
@@ -155,10 +159,8 @@ export class OAuth2User implements AuthClient {
   isAccessTokenExpired(): boolean {
     const refresh_token = this.token?.refresh_token;
     const expires_at = this.token?.expires_at;
-    return (
-      !!refresh_token &&
-      (!expires_at || expires_at <= new Date(Date.now() + 1000))
-    );
+    if (!expires_at) return true;
+    return !!refresh_token && expires_at <= Date.now() + 1000;
   }
 
   /**
