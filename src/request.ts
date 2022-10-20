@@ -84,7 +84,7 @@ export async function request({
 }: RequestOptions): Promise<Response> {
   const url = new URL(base_url + endpoint);
   url.search = buildQueryString(query);
-  const isPost = method === "POST" && !!request_body;
+  const includeBody = (method === "POST" || method === "PUT") && !!request_body;
   const authHeader = auth
     ? await auth.getAuthHeader(url.href, method)
     : undefined;
@@ -92,14 +92,14 @@ export async function request({
     url.toString(),
     {
       headers: {
-        ...(isPost
+        ...(includeBody
           ? { "Content-Type": "application/json; charset=utf-8" }
           : undefined),
         ...authHeader,
         ...headers,
       },
       method,
-      body: isPost ? JSON.stringify(request_body) : undefined,
+      body: includeBody ? JSON.stringify(request_body) : undefined,
       // Timeout if you don't see any data for 60 seconds
       // https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data
       timeout: 60000,
