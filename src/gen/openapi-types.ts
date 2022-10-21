@@ -97,6 +97,10 @@ export interface paths {
     /** Streams 100% of public Tweets. */
     get: operations["getTweetsFirehoseStream"];
   };
+  "/2/tweets/label/stream": {
+    /** Streams 100% of labeling events applied to Tweets */
+    get: operations["getTweetsLabelStream"];
+  };
   "/2/tweets/sample/stream": {
     /** Streams a deterministic 1% of public Tweets. */
     get: operations["sampleStream"];
@@ -1179,28 +1183,11 @@ export interface components {
       title: string;
       type: string;
     };
-    ProblemErrors: {
-      errors: components["schemas"]["Problems"];
-    };
-    /** @description Represents the response in case of throwing an exception. Mainly for the openapi-generator */
-    ProblemOrError:
-      | components["schemas"]["Error"]
-      | components["schemas"]["Problem"];
-    Problems: components["schemas"]["Problem"][];
     /**
      * @description Shows who can reply a Tweet. Fields returned are everyone, mentioned_users, and following.
      * @enum {string}
      */
     ReplySettings: "everyone" | "mentionedUsers" | "following" | "other";
-    ReportUsersRequest: {
-      description: string;
-      user_ids: components["schemas"]["UserId"][];
-    };
-    ReportUsersResponse: {
-      data?: {
-        id?: number;
-      };
-    };
     /** @description A problem that indicates that a given Tweet, User, etc. does not exist. */
     ResourceNotFoundProblem: components["schemas"]["Problem"] & {
       parameter: string;
@@ -1588,6 +1575,8 @@ export interface components {
     /** @description The count for the bucket. */
     TweetCount: number;
     TweetCreateRequest: {
+      /** @description Card Uri Parameter. This is mutually exclusive from Quote Tweet Id, Poll, Media, and Direct Message Deep Link. */
+      card_uri?: string;
       /** @description Link to take the conversation from the public timeline to a private Direct Message. */
       direct_message_deep_link?: string;
       /**
@@ -1599,14 +1588,19 @@ export interface components {
       geo?: {
         place_id?: string;
       };
-      /** @description Media information being attached to created Tweet. This is mutually exclusive from Quote Tweet Id and Poll. */
+      /** @description Media information being attached to created Tweet. This is mutually exclusive from Quote Tweet Id, Poll, and Card URI. */
       media?: {
         /** @description A list of Media Ids to be attached to a created Tweet. */
         media_ids: components["schemas"]["MediaId"][];
         /** @description A list of User Ids to be tagged in the media for created Tweet. */
         tagged_user_ids?: components["schemas"]["UserId"][];
       };
-      /** @description Poll options for a Tweet with a poll. This is mutually exclusive from Media and Quote Tweet Id. */
+      /**
+       * @description Nullcasted (promoted-only) Tweets do not appear in the public timeline and are not served to followers.
+       * @default false
+       */
+      nullcast?: boolean;
+      /** @description Poll options for a Tweet with a poll. This is mutually exclusive from Media, Quote Tweet Id, and Card URI. */
       poll?: {
         /**
          * Format: int32
@@ -1682,6 +1676,49 @@ export interface components {
      * @example 1346889436626259968
      */
     TweetId: string;
+    /** @description Tweet label data. */
+    TweetLabelData:
+      | components["schemas"]["TweetNoticeSchema"]
+      | components["schemas"]["TweetUnviewableSchema"];
+    /** @description Tweet label stream events. */
+    TweetLabelStreamResponse:
+      | {
+          data: components["schemas"]["TweetLabelData"];
+        }
+      | {
+          errors: components["schemas"]["Problem"][];
+        };
+    TweetNotice: {
+      /**
+       * @description If the label is being applied or removed. Possible values are ‘apply’ or ‘remove’.
+       * @example apply
+       */
+      application: string;
+      /** @description Information shown on the Tweet label */
+      details?: string;
+      /**
+       * Format: date-time
+       * @description Event time.
+       * @example 2021-07-06T18:40:40.000Z
+       */
+      event_at: string;
+      /**
+       * @description The type of label on the Tweet
+       * @example misleading
+       */
+      event_type: string;
+      /** @description Link to more information about this kind of label */
+      extended_details_url?: string;
+      /** @description Title/header of the Tweet label */
+      label_title?: string;
+      tweet: {
+        author_id: components["schemas"]["UserId"];
+        id: components["schemas"]["TweetId"];
+      };
+    };
+    TweetNoticeSchema: {
+      public_tweet_notice: components["schemas"]["TweetNotice"];
+    };
     TweetTakedownComplianceSchema: {
       /**
        * Format: date-time
@@ -1703,6 +1740,26 @@ export interface components {
     TweetText: string;
     TweetUndropComplianceSchema: {
       undrop: components["schemas"]["TweetComplianceSchema"];
+    };
+    TweetUnviewable: {
+      /**
+       * @description If the label is being applied or removed. Possible values are ‘apply’ or ‘remove’.
+       * @example apply
+       */
+      application: string;
+      /**
+       * Format: date-time
+       * @description Event time.
+       * @example 2021-07-06T18:40:40.000Z
+       */
+      event_at: string;
+      tweet: {
+        author_id: components["schemas"]["UserId"];
+        id: components["schemas"]["TweetId"];
+      };
+    };
+    TweetUnviewableSchema: {
+      public_tweet_unviewable: components["schemas"]["TweetUnviewable"];
     };
     /** @description Indicates withholding details for [withheld content](https://help.twitter.com/en/rules-and-policies/tweet-withheld-by-country). */
     TweetWithheld: {
@@ -3059,6 +3116,34 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["StreamingTweetResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Streams 100% of labeling events applied to Tweets */
+  getTweetsLabelStream: {
+    parameters: {
+      query: {
+        /** The number of minutes of backfill requested. */
+        backfill_minutes?: number;
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Tweet labels will be provided. */
+        start_time?: string;
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp from which the Tweet labels will be provided. */
+        end_time?: string;
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TweetLabelStreamResponse"];
         };
       };
       /** The request has failed. */
@@ -4728,6 +4813,7 @@ export type getTweetsComplianceStream = operations['getTweetsComplianceStream']
 export type tweetCountsFullArchiveSearch = operations['tweetCountsFullArchiveSearch']
 export type tweetCountsRecentSearch = operations['tweetCountsRecentSearch']
 export type getTweetsFirehoseStream = operations['getTweetsFirehoseStream']
+export type getTweetsLabelStream = operations['getTweetsLabelStream']
 export type sampleStream = operations['sampleStream']
 export type getTweetsSample10Stream = operations['getTweetsSample10Stream']
 export type tweetsFullarchiveSearch = operations['tweetsFullarchiveSearch']

@@ -42,6 +42,7 @@ import {
   tweetCountsFullArchiveSearch,
   tweetCountsRecentSearch,
   getTweetsFirehoseStream,
+  getTweetsLabelStream,
   sampleStream,
   getTweetsSample10Stream,
   tweetsFullarchiveSearch,
@@ -107,8 +108,8 @@ export class Client {
     auth: string | AuthClient,
     requestOptions?: Partial<RequestOptions>
   ) {
-    this.version = "1.2.0";
-    this.twitterApiOpenApiVersion = "2.51";
+    this.version = "1.2.1";
+    this.twitterApiOpenApiVersion = "2.54";
     this.#auth = typeof auth === "string" ? new OAuth2Bearer(auth) : auth;
     this.#defaultRequestOptions = {
       ...requestOptions,
@@ -287,6 +288,27 @@ export class Client {
         ...this.#defaultRequestOptions,
         ...request_options,
         endpoint: `/2/tweets/compliance/stream`,
+        params,
+        method: "GET",
+      }),
+
+    /**
+    * Tweets Label stream
+    *
+
+    * Streams 100% of labeling events applied to Tweets
+    * @param params - The params for getTweetsLabelStream
+    * @param request_options - Customize the options for this request
+    */
+    getTweetsLabelStream: (
+      params: TwitterParams<getTweetsLabelStream> = {},
+      request_options?: Partial<RequestOptions>
+    ): AsyncGenerator<TwitterResponse<getTweetsLabelStream>> =>
+      stream<TwitterResponse<getTweetsLabelStream>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/tweets/label/stream`,
         params,
         method: "GET",
       }),
