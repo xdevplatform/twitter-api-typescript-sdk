@@ -20,6 +20,12 @@ import {
   listBatchComplianceJobs,
   createBatchComplianceJob,
   getBatchComplianceJob,
+  dmConversationIdCreate,
+  getDmConversationsWithParticipantIdDmEvents,
+  dmConversationWithUserEventIdCreate,
+  dmConversationByIdEventIdCreate,
+  getDmConversationsIdDmEvents,
+  getDmEvents,
   listIdCreate,
   listIdDelete,
   listIdGet,
@@ -108,8 +114,8 @@ export class Client {
     auth: string | AuthClient,
     requestOptions?: Partial<RequestOptions>
   ) {
-    this.version = "1.2.1";
-    this.twitterApiOpenApiVersion = "2.54";
+    this.version = "1.3.0";
+    this.twitterApiOpenApiVersion = "2.55";
     this.#auth = typeof auth === "string" ? new OAuth2Bearer(auth) : auth;
     this.#defaultRequestOptions = {
       ...requestOptions,
@@ -330,6 +336,153 @@ export class Client {
         ...this.#defaultRequestOptions,
         ...request_options,
         endpoint: `/2/users/compliance/stream`,
+        params,
+        method: "GET",
+      }),
+  };
+  /**
+   * Direct Messages
+   *
+   * Endpoints related to retrieving, managing Direct Messages
+   *
+   * Find out more
+   * https://developer.twitter.com/en/docs/twitter-api/direct-messages
+   */
+  public readonly directMessages = {
+    /**
+    * Create a new DM Conversation
+    *
+
+    * Creates a new DM Conversation.
+    * @param request_body - The request_body for dmConversationIdCreate
+    * @param request_options - Customize the options for this request
+    */
+    dmConversationIdCreate: (
+      request_body: TwitterBody<dmConversationIdCreate>,
+      request_options?: Partial<RequestOptions>
+    ): Promise<TwitterResponse<dmConversationIdCreate>> =>
+      rest<TwitterResponse<dmConversationIdCreate>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/dm_conversations`,
+        request_body,
+        method: "POST",
+      }),
+
+    /**
+    * Get DM Events for a DM Conversation
+    *
+
+    * Returns DM Events for a DM Conversation
+    * @param participant_id - The ID of the participant user for the One to One DM conversation.
+    * @param params - The params for getDmConversationsWithParticipantIdDmEvents
+    * @param request_options - Customize the options for this request
+    */
+    getDmConversationsWithParticipantIdDmEvents: (
+      participant_id: string,
+      params: TwitterParams<getDmConversationsWithParticipantIdDmEvents> = {},
+      request_options?: Partial<RequestOptions>
+    ): TwitterPaginatedResponse<
+      TwitterResponse<getDmConversationsWithParticipantIdDmEvents>
+    > =>
+      paginate<TwitterResponse<getDmConversationsWithParticipantIdDmEvents>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/dm_conversations/with/${participant_id}/dm_events`,
+        params,
+        method: "GET",
+      }),
+
+    /**
+    * Send a new message to a user
+    *
+
+    * Creates a new message for a DM Conversation with a participant user by ID
+    * @param participant_id - The ID of the recipient user that will receive the DM.
+    * @param request_body - The request_body for dmConversationWithUserEventIdCreate
+    * @param request_options - Customize the options for this request
+    */
+    dmConversationWithUserEventIdCreate: (
+      participant_id: string,
+      request_body: TwitterBody<dmConversationWithUserEventIdCreate>,
+      request_options?: Partial<RequestOptions>
+    ): Promise<TwitterResponse<dmConversationWithUserEventIdCreate>> =>
+      rest<TwitterResponse<dmConversationWithUserEventIdCreate>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/dm_conversations/with/${participant_id}/messages`,
+        request_body,
+        method: "POST",
+      }),
+
+    /**
+    * Send a new message to a DM Conversation
+    *
+
+    * Creates a new message for a DM Conversation specified by DM Conversation ID
+    * @param dm_conversation_id - The DM Conversation ID.
+    * @param request_body - The request_body for dmConversationByIdEventIdCreate
+    * @param request_options - Customize the options for this request
+    */
+    dmConversationByIdEventIdCreate: (
+      dm_conversation_id: string,
+      request_body: TwitterBody<dmConversationByIdEventIdCreate>,
+      request_options?: Partial<RequestOptions>
+    ): Promise<TwitterResponse<dmConversationByIdEventIdCreate>> =>
+      rest<TwitterResponse<dmConversationByIdEventIdCreate>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/dm_conversations/${dm_conversation_id}/messages`,
+        request_body,
+        method: "POST",
+      }),
+
+    /**
+    * Get DM Events for a DM Conversation
+    *
+
+    * Returns DM Events for a DM Conversation
+    * @param id - The DM Conversation ID.
+    * @param params - The params for getDmConversationsIdDmEvents
+    * @param request_options - Customize the options for this request
+    */
+    getDmConversationsIdDmEvents: (
+      id: string,
+      params: TwitterParams<getDmConversationsIdDmEvents> = {},
+      request_options?: Partial<RequestOptions>
+    ): TwitterPaginatedResponse<
+      TwitterResponse<getDmConversationsIdDmEvents>
+    > =>
+      paginate<TwitterResponse<getDmConversationsIdDmEvents>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/dm_conversations/${id}/dm_events`,
+        params,
+        method: "GET",
+      }),
+
+    /**
+    * Get recent DM Events
+    *
+
+    * Returns recent DM Events across DM conversations
+    * @param params - The params for getDmEvents
+    * @param request_options - Customize the options for this request
+    */
+    getDmEvents: (
+      params: TwitterParams<getDmEvents> = {},
+      request_options?: Partial<RequestOptions>
+    ): TwitterPaginatedResponse<TwitterResponse<getDmEvents>> =>
+      paginate<TwitterResponse<getDmEvents>>({
+        auth: this.#auth,
+        ...this.#defaultRequestOptions,
+        ...request_options,
+        endpoint: `/2/dm_events`,
         params,
         method: "GET",
       }),
