@@ -90,7 +90,7 @@ interface GetTokenResponse {
   scope?: string;
 }
 
-interface Token extends Omit<GetTokenResponse, "expires_in"> {
+export interface Token extends Omit<GetTokenResponse, "expires_in"> {
   /** Date that the access_token will expire at.  */
   expires_at?: number;
 }
