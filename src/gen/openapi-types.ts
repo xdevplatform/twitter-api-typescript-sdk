@@ -17,6 +17,30 @@ export interface paths {
     /** Returns a single Compliance Job by ID */
     get: operations["getBatchComplianceJob"];
   };
+  "/2/dm_conversations": {
+    /** Creates a new DM Conversation. */
+    post: operations["dmConversationIdCreate"];
+  };
+  "/2/dm_conversations/with/{participant_id}/dm_events": {
+    /** Returns DM Events for a DM Conversation */
+    get: operations["getDmConversationsWithParticipantIdDmEvents"];
+  };
+  "/2/dm_conversations/with/{participant_id}/messages": {
+    /** Creates a new message for a DM Conversation with a participant user by ID */
+    post: operations["dmConversationWithUserEventIdCreate"];
+  };
+  "/2/dm_conversations/{dm_conversation_id}/messages": {
+    /** Creates a new message for a DM Conversation specified by DM Conversation ID */
+    post: operations["dmConversationByIdEventIdCreate"];
+  };
+  "/2/dm_conversations/{id}/dm_events": {
+    /** Returns DM Events for a DM Conversation */
+    get: operations["getDmConversationsIdDmEvents"];
+  };
+  "/2/dm_events": {
+    /** Returns recent DM Events across DM conversations */
+    get: operations["getDmEvents"];
+  };
   "/2/lists": {
     /** Creates a new List. */
     post: operations["listIdCreate"];
@@ -409,6 +433,11 @@ export interface components {
      * @example US
      */
     CountryCode: string;
+    CreateAttachmentsMessageRequest: {
+      attachments: components["schemas"]["DmAttachments"];
+      /** @description Text of the message. */
+      text?: string;
+    };
     /** @description A request to create a new batch compliance job. */
     CreateComplianceJobRequest: {
       name?: components["schemas"]["ComplianceJobName"];
@@ -423,6 +452,31 @@ export interface components {
     CreateComplianceJobResponse: {
       data?: components["schemas"]["ComplianceJob"];
       errors?: components["schemas"]["Problem"][];
+    };
+    CreateDmConversationRequest: {
+      /**
+       * @description The conversation type that is being created.
+       * @enum {string}
+       */
+      conversation_type: "Group";
+      message: components["schemas"]["CreateMessageRequest"];
+      participant_ids: components["schemas"]["DmParticipants"];
+    };
+    CreateDmEventResponse: {
+      data?: {
+        dm_conversation_id: components["schemas"]["DmConversationId"];
+        dm_event_id: components["schemas"]["DmEventId"];
+      };
+      errors?: components["schemas"]["Problem"][];
+    };
+    CreateMessageRequest: Partial<
+      components["schemas"]["CreateTextMessageRequest"]
+    > &
+      Partial<components["schemas"]["CreateAttachmentsMessageRequest"]>;
+    CreateTextMessageRequest: {
+      attachments?: components["schemas"]["DmAttachments"];
+      /** @description Text of the message. */
+      text: string;
     };
     /**
      * Format: date-time
@@ -448,6 +502,46 @@ export interface components {
       /** @enum {string} */
       section: "data" | "includes";
     };
+    /** @description Attachments to a DM Event. */
+    DmAttachments: components["schemas"]["DmMediaAttachment"][];
+    /**
+     * @description Unique identifier of a DM conversation. This can either be a numeric string, or a pair of numeric strings separated by a '-' character in the case of one-on-one DM Conversations.
+     * @example 123123123-456456456
+     */
+    DmConversationId: string;
+    DmEvent: {
+      /** @description Specifies the type of attachments (if any) present in this DM. */
+      attachments?: {
+        /** @description A list of card IDs (if cards are attached). */
+        card_ids?: string[];
+        /** @description A list of Media Keys for each one of the media attachments (if media are attached). */
+        media_keys?: components["schemas"]["MediaKey"][];
+      };
+      /** Format: date-time */
+      created_at?: string;
+      dm_conversation_id?: components["schemas"]["DmConversationId"];
+      /** @example MessageCreate */
+      event_type: string;
+      id: components["schemas"]["DmEventId"];
+      /** @description A list of participants for a ParticipantsJoin or ParticipantsLeave event_type. */
+      participant_ids?: components["schemas"]["UserId"][];
+      /** @description A list of Tweets this DM refers to. */
+      referenced_tweets?: {
+        id: components["schemas"]["TweetId"];
+      }[];
+      sender_id?: components["schemas"]["UserId"];
+      text?: string;
+    };
+    /**
+     * @description Unique identifier of a DM Event.
+     * @example 1146654567674912769
+     */
+    DmEventId: string;
+    DmMediaAttachment: {
+      media_id: components["schemas"]["MediaId"];
+    };
+    /** @description Participants for the DM Conversation. */
+    DmParticipants: components["schemas"]["UserId"][];
     /**
      * Format: date-time
      * @description Expiration time of the download URL.
@@ -575,6 +669,36 @@ export interface components {
       data?: components["schemas"]["ComplianceJob"][];
       errors?: components["schemas"]["Problem"][];
       meta?: {
+        result_count?: components["schemas"]["ResultCount"];
+      };
+    };
+    Get2DmConversationsIdDmEventsResponse: {
+      data?: components["schemas"]["DmEvent"][];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
+      meta?: {
+        next_token?: components["schemas"]["NextToken"];
+        previous_token?: components["schemas"]["PreviousToken"];
+        result_count?: components["schemas"]["ResultCount"];
+      };
+    };
+    Get2DmConversationsWithParticipantIdDmEventsResponse: {
+      data?: components["schemas"]["DmEvent"][];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
+      meta?: {
+        next_token?: components["schemas"]["NextToken"];
+        previous_token?: components["schemas"]["PreviousToken"];
+        result_count?: components["schemas"]["ResultCount"];
+      };
+    };
+    Get2DmEventsResponse: {
+      data?: components["schemas"]["DmEvent"][];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
+      meta?: {
+        next_token?: components["schemas"]["NextToken"];
+        previous_token?: components["schemas"]["PreviousToken"];
         result_count?: components["schemas"]["ResultCount"];
       };
     };
@@ -2195,6 +2319,27 @@ export interface components {
       | "upload_expires_at"
       | "upload_url"
     )[];
+    /** @description A comma separated list of DmConversation fields to display. */
+    DmConversationFieldsParameter: "id"[];
+    /** @description A comma separated list of fields to expand. */
+    DmEventExpansionsParameter: (
+      | "attachments.media_keys"
+      | "participant_ids"
+      | "referenced_tweets.id"
+      | "sender_id"
+    )[];
+    /** @description A comma separated list of DmEvent fields to display. */
+    DmEventFieldsParameter: (
+      | "attachments"
+      | "created_at"
+      | "dm_conversation_id"
+      | "event_type"
+      | "id"
+      | "participant_ids"
+      | "referenced_tweets"
+      | "sender_id"
+      | "text"
+    )[];
     /** @description A comma separated list of fields to expand. */
     ListExpansionsParameter: "owner_id"[];
     /** @description A comma separated list of List fields to display. */
@@ -2404,6 +2549,222 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["Get2ComplianceJobsIdResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Creates a new DM Conversation. */
+  dmConversationIdCreate: {
+    parameters: {};
+    responses: {
+      /** The request has succeeded. */
+      201: {
+        content: {
+          "application/json": components["schemas"]["CreateDmEventResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateDmConversationRequest"];
+      };
+    };
+  };
+  /** Returns DM Events for a DM Conversation */
+  getDmConversationsWithParticipantIdDmEvents: {
+    parameters: {
+      path: {
+        /** The ID of the participant user for the One to One DM conversation. */
+        participant_id: components["schemas"]["UserId"];
+      };
+      query: {
+        /** The maximum number of results. */
+        max_results?: number;
+        /** This parameter is used to get a specified 'page' of results. */
+        pagination_token?: components["schemas"]["PaginationToken32"];
+        /** The set of event_types to include in the results. */
+        event_types?: (
+          | "MessageCreate"
+          | "ParticipantsJoin"
+          | "ParticipantsLeave"
+        )[];
+        /** A comma separated list of DmEvent fields to display. */
+        "dm_event.fields"?: components["parameters"]["DmEventFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["DmEventExpansionsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Get2DmConversationsWithParticipantIdDmEventsResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Creates a new message for a DM Conversation with a participant user by ID */
+  dmConversationWithUserEventIdCreate: {
+    parameters: {
+      path: {
+        /** The ID of the recipient user that will receive the DM. */
+        participant_id: components["schemas"]["UserId"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      201: {
+        content: {
+          "application/json": components["schemas"]["CreateDmEventResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateMessageRequest"];
+      };
+    };
+  };
+  /** Creates a new message for a DM Conversation specified by DM Conversation ID */
+  dmConversationByIdEventIdCreate: {
+    parameters: {
+      path: {
+        /** The DM Conversation ID. */
+        dm_conversation_id: string;
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      201: {
+        content: {
+          "application/json": components["schemas"]["CreateDmEventResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateMessageRequest"];
+      };
+    };
+  };
+  /** Returns DM Events for a DM Conversation */
+  getDmConversationsIdDmEvents: {
+    parameters: {
+      path: {
+        /** The DM Conversation ID. */
+        id: components["schemas"]["DmConversationId"];
+      };
+      query: {
+        /** The maximum number of results. */
+        max_results?: number;
+        /** This parameter is used to get a specified 'page' of results. */
+        pagination_token?: components["schemas"]["PaginationToken32"];
+        /** The set of event_types to include in the results. */
+        event_types?: (
+          | "MessageCreate"
+          | "ParticipantsJoin"
+          | "ParticipantsLeave"
+        )[];
+        /** A comma separated list of DmEvent fields to display. */
+        "dm_event.fields"?: components["parameters"]["DmEventFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["DmEventExpansionsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Get2DmConversationsIdDmEventsResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Returns recent DM Events across DM conversations */
+  getDmEvents: {
+    parameters: {
+      query: {
+        /** The maximum number of results. */
+        max_results?: number;
+        /** This parameter is used to get a specified 'page' of results. */
+        pagination_token?: components["schemas"]["PaginationToken32"];
+        /** The set of event_types to include in the results. */
+        event_types?: (
+          | "MessageCreate"
+          | "ParticipantsJoin"
+          | "ParticipantsLeave"
+        )[];
+        /** A comma separated list of DmEvent fields to display. */
+        "dm_event.fields"?: components["parameters"]["DmEventFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["DmEventExpansionsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Get2DmEventsResponse"];
         };
       };
       /** The request has failed. */
@@ -4791,6 +5152,12 @@ export interface external {}
 export type listBatchComplianceJobs = operations['listBatchComplianceJobs']
 export type createBatchComplianceJob = operations['createBatchComplianceJob']
 export type getBatchComplianceJob = operations['getBatchComplianceJob']
+export type dmConversationIdCreate = operations['dmConversationIdCreate']
+export type getDmConversationsWithParticipantIdDmEvents = operations['getDmConversationsWithParticipantIdDmEvents']
+export type dmConversationWithUserEventIdCreate = operations['dmConversationWithUserEventIdCreate']
+export type dmConversationByIdEventIdCreate = operations['dmConversationByIdEventIdCreate']
+export type getDmConversationsIdDmEvents = operations['getDmConversationsIdDmEvents']
+export type getDmEvents = operations['getDmEvents']
 export type listIdCreate = operations['listIdCreate']
 export type listIdDelete = operations['listIdDelete']
 export type listIdGet = operations['listIdGet']
