@@ -1,5 +1,15 @@
 # Twitter API SDK for TypeScript
 
+## Note
+
+This is a fork of the official Twitter API SDK for TypeScript. The original repo is [here](https://github.com/twitterdev/twitter-api-typescript-sdk)
+
+The original repo is not maintained anymore. So I forked it and made some changes to make it work with the latest version of the Twitter API.
+
+## License
+
+This software is released under the Apache 2.0 License. The main license can be found [here](LICENSE), this license belongs to Twitter Inc.
+
 ## Introduction
 
 A TypeScript SDK for the Twitter API. This library is built with TypeScript developers in mind, but it also works with JavaScript.
@@ -121,6 +131,7 @@ const client = new Client(authClient);
 ```
 
 ### Creating a Confidential Auth Client
+
 ```typescript
 const authClient = new auth.OAuth2User({
   client_id: process.env.CLIENT_ID,
@@ -131,7 +142,6 @@ const authClient = new auth.OAuth2User({
 
 const client = new Client(authClient);
 ```
-
 
 ### Generating an Authentication URL
 
@@ -158,7 +168,6 @@ const response = await authClient.revokeAccessToken();
 ## Contributing
 
 Note this is only for developers who want to contribute code to the SDK
-
 
 ### Clone the Repository
 
@@ -193,4 +202,3 @@ yarn build
 ```
 yarn test
 ```
-
