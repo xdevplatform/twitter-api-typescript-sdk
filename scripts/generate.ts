@@ -38,6 +38,14 @@ function importTypes(operationIds: string[]) {
   return output;
 }
 
+function convertTag(tag: string) {
+  const [fst, ...rest] = tag.toLowerCase().split(" ");
+  return (
+    fst.toLowerCase() +
+    rest.map((x) => x.charAt(0).toUpperCase() + x.slice(1)).join("")
+  );
+}
+
 function functionDocs(
   summary?: string,
   description?: string,
@@ -193,7 +201,7 @@ export async function generate(): Promise<void> {
   const { paths, tags } = spec;
 
   const classes = tags.reduce((prev: any, next: { name: string }) => {
-    const name = next.name.toLowerCase();
+    const name = convertTag(next.name);
     return {
       ...prev,
       [name]: { functions: [], ...next },
@@ -203,7 +211,7 @@ export async function generate(): Promise<void> {
   const operationIds: string[] = [];
 
   let output = `${LICENCE}
-   
+
 /*
 This file is auto-generated
 Do not make direct changes to this file
@@ -254,7 +262,7 @@ import { OAuth2Bearer } from "../auth";\n\n`;
       operationIds.push(operationId);
 
       if (!tags?.length) throw "No tags found";
-      const tag = tags[0].toLowerCase();
+      const tag = convertTag(tags[0]);
       classes[tag].functions.push(
         functionDocs(
           summary,
