@@ -37,7 +37,7 @@ npm install twitter-api-sdk
 To setup the client we will authenticate with a bearer-token as follows
 
 ```typescript
-import { Client } from "twitter-api-sdk";
+import { Client } from "@sor4chi/twitter-api-sdk";
 
 const client = new Client("MY-BEARER-TOKEN");
 ```
@@ -49,7 +49,7 @@ For more information about authentication [go here](#authentication)
 ### Consuming a Stream
 
 ```typescript
-import { Client } from "twitter-api-sdk";
+import { Client } from "@sor4chi/twitter-api-sdk";
 
 const client = new Client(process.env.BEARER_TOKEN);
 
@@ -68,7 +68,7 @@ main();
 ### Getting a Tweet
 
 ```typescript
-import { Client } from "twitter-api-sdk";
+import { Client } from "@sor4chi/twitter-api-sdk";
 
 const client = new Client(process.env.BEARER_TOKEN);
 
