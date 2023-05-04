@@ -1895,6 +1895,8 @@ export interface components {
       username: components["schemas"]["UserName"];
       /** @description Indicate if this User is a verified Twitter User. */
       verified?: boolean;
+      /** @description Indicates the type of verification for the Twitter account. */
+      verified_type?: "blue" | "business" | "government" | "none";
       withheld?: components["schemas"]["UserWithheld"];
     };
     /** @description User compliance data. */
