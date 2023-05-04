@@ -2331,6 +2331,7 @@ export interface components {
       | "url"
       | "username"
       | "verified"
+      | "verified_type"
       | "withheld"
     )[];
   };
