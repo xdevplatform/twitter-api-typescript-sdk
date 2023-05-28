@@ -242,7 +242,7 @@ export class OAuth2User implements AuthClient {
     });
   }
 
-  generateAuthURL(options: GenerateAuthUrlOptions): string {
+  async generateAuthURL(options: GenerateAuthUrlOptions): Promise<string> {
     const { client_id, callback, scopes } = this.#options;
     if (!callback) throw new Error("callback required");
     if (!scopes) throw new Error("scopes required");

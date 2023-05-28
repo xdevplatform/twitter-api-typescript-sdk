@@ -136,7 +136,7 @@ const client = new Client(authClient);
 ### Generating an Authentication URL
 
 ```typescript
-const authUrl = authClient.generateAuthURL({
+const authUrl = await authClient.generateAuthURL({
   code_challenge_method: "s256",
 });
 ```
