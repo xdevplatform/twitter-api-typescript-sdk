@@ -1,8 +1,7 @@
 // Copyright 2021 Twitter, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-import crypto from "crypto";
-import { buildQueryString, basicAuthHeader } from "./utils";
+import { buildQueryString, basicAuthHeader, base64Encode } from "./utils";
 import { AuthClient, AuthHeader } from "./types";
 import { RequestOptions, rest } from "./request";
 
@@ -63,13 +62,12 @@ export interface RevokeAccessTokenParams {
   client_id: string;
 }
 
-function sha256(buffer: string) {
-  return crypto.createHash("sha256").update(buffer).digest();
+async function sha256(buffer: string): Promise<Uint8Array> {
+  return new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(buffer)));
 }
 
-function base64URLEncode(str: Buffer) {
-  return str
-    .toString("base64")
+function base64URLEncode(str: Uint8Array) {
+  return base64Encode(str)
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
     .replace(/=/g, "");
@@ -247,9 +245,9 @@ export class OAuth2User implements AuthClient {
     if (!callback) throw new Error("callback required");
     if (!scopes) throw new Error("scopes required");
     if (options.code_challenge_method === "s256") {
-      const code_verifier = base64URLEncode(crypto.randomBytes(32));
+      const code_verifier = base64URLEncode(crypto.getRandomValues(new Uint8Array(32)));
       this.#code_verifier = code_verifier;
-      this.#code_challenge = base64URLEncode(sha256(code_verifier));
+      this.#code_challenge = base64URLEncode(await sha256(code_verifier));
     } else {
       this.#code_challenge = options.code_challenge;
       this.#code_verifier = options.code_challenge;
