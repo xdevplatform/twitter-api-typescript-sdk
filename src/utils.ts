@@ -12,8 +12,10 @@ export function buildQueryString(query: Record<string, any>): string {
     .join("&");
 }
 
+export function base64Encode(byteValues: Uint8Array): string {
+  return btoa([...byteValues].map(byteValue => String.fromCharCode(byteValue)).join(''))
+}
+
 export function basicAuthHeader(client_id: string, client_secret: string) {
-  return `Basic ${Buffer.from(`${client_id}:${client_secret}`).toString(
-    "base64"
-  )}`;
+  return `Basic ${base64Encode(new TextEncoder().encode(`${client_id}:${client_secret}`))}`
 }

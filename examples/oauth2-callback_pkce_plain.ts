@@ -32,7 +32,7 @@ app.get("/callback", async function (req, res) {
 });
 
 app.get("/login", async function (req, res) {
-  const authUrl = authClient.generateAuthURL({
+  const authUrl = await authClient.generateAuthURL({
     state: STATE,
     code_challenge_method: "plain",
     code_challenge: "test",
