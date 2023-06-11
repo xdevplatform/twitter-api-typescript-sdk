@@ -8,89 +8,89 @@ Do not make direct changes to this file
 
 import { rest, stream, paginate, RequestOptions } from "../request";
 import {
-  AuthClient,
-  TwitterResponse,
-  TwitterBody,
-  TwitterParams,
-  TwitterPaginatedResponse,
+	AuthClient,
+	TwitterResponse,
+	TwitterBody,
+	TwitterParams,
+	TwitterPaginatedResponse,
 } from "../types";
 import { OAuth2Bearer } from "../auth";
 
 import {
-  listBatchComplianceJobs,
-  createBatchComplianceJob,
-  getBatchComplianceJob,
-  listIdCreate,
-  listIdDelete,
-  listIdGet,
-  listIdUpdate,
-  listGetFollowers,
-  listGetMembers,
-  listAddMember,
-  listRemoveMember,
-  listsIdTweets,
-  getOpenApiSpec,
-  findSpacesByIds,
-  findSpacesByCreatorIds,
-  searchSpaces,
-  findSpaceById,
-  spaceBuyers,
-  spaceTweets,
-  findTweetsById,
-  createTweet,
-  getTweetsComplianceStream,
-  tweetCountsFullArchiveSearch,
-  tweetCountsRecentSearch,
-  getTweetsFirehoseStream,
-  getTweetsLabelStream,
-  sampleStream,
-  getTweetsSample10Stream,
-  tweetsFullarchiveSearch,
-  tweetsRecentSearch,
-  searchStream,
-  getRules,
-  addOrDeleteRules,
-  deleteTweetById,
-  findTweetById,
-  tweetsIdLikingUsers,
-  findTweetsThatQuoteATweet,
-  tweetsIdRetweetingUsers,
-  hideReplyById,
-  findUsersById,
-  findUsersByUsername,
-  findUserByUsername,
-  getUsersComplianceStream,
-  findMyUser,
-  findUserById,
-  usersIdBlocking,
-  usersIdBlock,
-  getUsersIdBookmarks,
-  postUsersIdBookmarks,
-  usersIdBookmarksDelete,
-  userFollowedLists,
-  listUserFollow,
-  listUserUnfollow,
-  usersIdFollowers,
-  usersIdFollowing,
-  usersIdFollow,
-  usersIdLikedTweets,
-  usersIdLike,
-  usersIdUnlike,
-  getUserListMemberships,
-  usersIdMentions,
-  usersIdMuting,
-  usersIdMute,
-  listUserOwnedLists,
-  listUserPinnedLists,
-  listUserPin,
-  listUserUnpin,
-  usersIdRetweets,
-  usersIdUnretweets,
-  usersIdTimeline,
-  usersIdTweets,
-  usersIdUnblock,
-  usersIdUnfollow,
-  usersIdUnmute,
+	listBatchComplianceJobs,
+	createBatchComplianceJob,
+	getBatchComplianceJob,
+	listIdCreate,
+	listIdDelete,
+	listIdGet,
+	listIdUpdate,
+	listGetFollowers,
+	listGetMembers,
+	listAddMember,
+	listRemoveMember,
+	listsIdTweets,
+	getOpenApiSpec,
+	findSpacesByIds,
+	findSpacesByCreatorIds,
+	searchSpaces,
+	findSpaceById,
+	spaceBuyers,
+	spaceTweets,
+	findTweetsById,
+	createTweet,
+	getTweetsComplianceStream,
+	tweetCountsFullArchiveSearch,
+	tweetCountsRecentSearch,
+	getTweetsFirehoseStream,
+	getTweetsLabelStream,
+	sampleStream,
+	getTweetsSample10Stream,
+	tweetsFullarchiveSearch,
+	tweetsRecentSearch,
+	searchStream,
+	getRules,
+	addOrDeleteRules,
+	deleteTweetById,
+	findTweetById,
+	tweetsIdLikingUsers,
+	findTweetsThatQuoteATweet,
+	tweetsIdRetweetingUsers,
+	hideReplyById,
+	findUsersById,
+	findUsersByUsername,
+	findUserByUsername,
+	getUsersComplianceStream,
+	findMyUser,
+	findUserById,
+	usersIdBlocking,
+	usersIdBlock,
+	getUsersIdBookmarks,
+	postUsersIdBookmarks,
+	usersIdBookmarksDelete,
+	userFollowedLists,
+	listUserFollow,
+	listUserUnfollow,
+	usersIdFollowers,
+	usersIdFollowing,
+	usersIdFollow,
+	usersIdLikedTweets,
+	usersIdLike,
+	usersIdUnlike,
+	getUserListMemberships,
+	usersIdMentions,
+	usersIdMuting,
+	usersIdMute,
+	listUserOwnedLists,
+	listUserPinnedLists,
+	listUserPin,
+	listUserUnpin,
+	usersIdRetweets,
+	usersIdUnretweets,
+	usersIdTimeline,
+	usersIdTweets,
+	usersIdUnblock,
+	usersIdUnfollow,
+	usersIdUnmute,
 } from "./openapi-types";
 /**
  * Twitter API TypeScript Client
@@ -99,37 +99,37 @@ import {
  *
  */
 export class Client {
-  #auth: AuthClient;
-  #defaultRequestOptions?: Partial<RequestOptions>;
-  version: string;
-  twitterApiOpenApiVersion: string;
+	#auth: AuthClient;
+	#defaultRequestOptions?: Partial<RequestOptions>;
+	version: string;
+	twitterApiOpenApiVersion: string;
 
-  constructor(
-    auth: string | AuthClient,
-    requestOptions?: Partial<RequestOptions>
-  ) {
-    this.version = "1.2.1";
-    this.twitterApiOpenApiVersion = "2.54";
-    this.#auth = typeof auth === "string" ? new OAuth2Bearer(auth) : auth;
-    this.#defaultRequestOptions = {
-      ...requestOptions,
-      headers: {
-        "User-Agent": "twitter-api-typescript-sdk/" + this.version,
-        ...requestOptions?.headers,
-      },
-    };
-  }
+	constructor(
+		auth: string | AuthClient,
+		requestOptions?: Partial<RequestOptions>
+	) {
+		this.version = "1.2.1";
+		this.twitterApiOpenApiVersion = "2.54";
+		this.#auth = typeof auth === "string" ? new OAuth2Bearer(auth) : auth;
+		this.#defaultRequestOptions = {
+			...requestOptions,
+			headers: {
+				"User-Agent": "twitter-api-typescript-sdk/" + this.version,
+				...requestOptions?.headers,
+			},
+		};
+	}
 
-  /**
-   * Bookmarks
-   *
-   * Endpoints related to retrieving, managing bookmarks of a user
-   *
-   * Find out more
-   * https://developer.twitter.com/en/docs/twitter-api/bookmarks
-   */
-  public readonly bookmarks = {
-    /**
+	/**
+	 * Bookmarks
+	 *
+	 * Endpoints related to retrieving, managing bookmarks of a user
+	 *
+	 * Find out more
+	 * https://developer.twitter.com/en/docs/twitter-api/bookmarks
+	 */
+	public readonly bookmarks = {
+		/**
     * Bookmarks by User
     *
 
@@ -138,21 +138,21 @@ export class Client {
     * @param params - The params for getUsersIdBookmarks
     * @param request_options - Customize the options for this request
     */
-    getUsersIdBookmarks: (
-      id: string,
-      params: TwitterParams<getUsersIdBookmarks> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<getUsersIdBookmarks>> =>
-      paginate<TwitterResponse<getUsersIdBookmarks>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/bookmarks`,
-        params,
-        method: "GET",
-      }),
+		getUsersIdBookmarks: (
+			id: string,
+			params: TwitterParams<getUsersIdBookmarks> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<getUsersIdBookmarks>> =>
+			paginate<TwitterResponse<getUsersIdBookmarks>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/bookmarks`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Add Tweet to Bookmarks
     *
 
@@ -161,21 +161,21 @@ export class Client {
     * @param request_body - The request_body for postUsersIdBookmarks
     * @param request_options - Customize the options for this request
     */
-    postUsersIdBookmarks: (
-      id: string,
-      request_body: TwitterBody<postUsersIdBookmarks>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<postUsersIdBookmarks>> =>
-      rest<TwitterResponse<postUsersIdBookmarks>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/bookmarks`,
-        request_body,
-        method: "POST",
-      }),
+		postUsersIdBookmarks: (
+			id: string,
+			request_body: TwitterBody<postUsersIdBookmarks>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<postUsersIdBookmarks>> =>
+			rest<TwitterResponse<postUsersIdBookmarks>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/bookmarks`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Remove a bookmarked Tweet
     *
 
@@ -184,29 +184,29 @@ export class Client {
     * @param tweet_id - The ID of the Tweet that the source User is removing from bookmarks.
     * @param request_options - Customize the options for this request
     */
-    usersIdBookmarksDelete: (
-      id: string,
-      tweet_id: string,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<usersIdBookmarksDelete>> =>
-      rest<TwitterResponse<usersIdBookmarksDelete>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/bookmarks/${tweet_id}`,
-        method: "DELETE",
-      }),
-  };
-  /**
-   * Compliance
-   *
-   * Endpoints related to keeping Twitter data in your systems compliant
-   *
-   * Find out more
-   * https://developer.twitter.com/en/docs/twitter-api/compliance/batch-tweet/introduction
-   */
-  public readonly compliance = {
-    /**
+		usersIdBookmarksDelete: (
+			id: string,
+			tweet_id: string,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<usersIdBookmarksDelete>> =>
+			rest<TwitterResponse<usersIdBookmarksDelete>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/bookmarks/${tweet_id}`,
+				method: "DELETE",
+			}),
+	};
+	/**
+	 * Compliance
+	 *
+	 * Endpoints related to keeping Twitter data in your systems compliant
+	 *
+	 * Find out more
+	 * https://developer.twitter.com/en/docs/twitter-api/compliance/batch-tweet/introduction
+	 */
+	public readonly compliance = {
+		/**
     * List Compliance Jobs
     *
 
@@ -214,20 +214,20 @@ export class Client {
     * @param params - The params for listBatchComplianceJobs
     * @param request_options - Customize the options for this request
     */
-    listBatchComplianceJobs: (
-      params: TwitterParams<listBatchComplianceJobs>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listBatchComplianceJobs>> =>
-      rest<TwitterResponse<listBatchComplianceJobs>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/compliance/jobs`,
-        params,
-        method: "GET",
-      }),
+		listBatchComplianceJobs: (
+			params: TwitterParams<listBatchComplianceJobs>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listBatchComplianceJobs>> =>
+			rest<TwitterResponse<listBatchComplianceJobs>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/compliance/jobs`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Create compliance job
     *
 
@@ -235,20 +235,20 @@ export class Client {
     * @param request_body - The request_body for createBatchComplianceJob
     * @param request_options - Customize the options for this request
     */
-    createBatchComplianceJob: (
-      request_body: TwitterBody<createBatchComplianceJob>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<createBatchComplianceJob>> =>
-      rest<TwitterResponse<createBatchComplianceJob>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/compliance/jobs`,
-        request_body,
-        method: "POST",
-      }),
+		createBatchComplianceJob: (
+			request_body: TwitterBody<createBatchComplianceJob>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<createBatchComplianceJob>> =>
+			rest<TwitterResponse<createBatchComplianceJob>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/compliance/jobs`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Get Compliance Job
     *
 
@@ -257,21 +257,21 @@ export class Client {
     * @param params - The params for getBatchComplianceJob
     * @param request_options - Customize the options for this request
     */
-    getBatchComplianceJob: (
-      id: string,
-      params: TwitterParams<getBatchComplianceJob> = {},
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<getBatchComplianceJob>> =>
-      rest<TwitterResponse<getBatchComplianceJob>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/compliance/jobs/${id}`,
-        params,
-        method: "GET",
-      }),
+		getBatchComplianceJob: (
+			id: string,
+			params: TwitterParams<getBatchComplianceJob> = {},
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<getBatchComplianceJob>> =>
+			rest<TwitterResponse<getBatchComplianceJob>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/compliance/jobs/${id}`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Tweets Compliance stream
     *
 
@@ -279,20 +279,20 @@ export class Client {
     * @param params - The params for getTweetsComplianceStream
     * @param request_options - Customize the options for this request
     */
-    getTweetsComplianceStream: (
-      params: TwitterParams<getTweetsComplianceStream>,
-      request_options?: Partial<RequestOptions>
-    ): AsyncGenerator<TwitterResponse<getTweetsComplianceStream>> =>
-      stream<TwitterResponse<getTweetsComplianceStream>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/compliance/stream`,
-        params,
-        method: "GET",
-      }),
+		getTweetsComplianceStream: (
+			params: TwitterParams<getTweetsComplianceStream>,
+			request_options?: Partial<RequestOptions>
+		): AsyncGenerator<TwitterResponse<getTweetsComplianceStream>> =>
+			stream<TwitterResponse<getTweetsComplianceStream>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/compliance/stream`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Tweets Label stream
     *
 
@@ -300,20 +300,20 @@ export class Client {
     * @param params - The params for getTweetsLabelStream
     * @param request_options - Customize the options for this request
     */
-    getTweetsLabelStream: (
-      params: TwitterParams<getTweetsLabelStream> = {},
-      request_options?: Partial<RequestOptions>
-    ): AsyncGenerator<TwitterResponse<getTweetsLabelStream>> =>
-      stream<TwitterResponse<getTweetsLabelStream>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/label/stream`,
-        params,
-        method: "GET",
-      }),
+		getTweetsLabelStream: (
+			params: TwitterParams<getTweetsLabelStream> = {},
+			request_options?: Partial<RequestOptions>
+		): AsyncGenerator<TwitterResponse<getTweetsLabelStream>> =>
+			stream<TwitterResponse<getTweetsLabelStream>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/label/stream`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Users Compliance stream
     *
 
@@ -321,56 +321,56 @@ export class Client {
     * @param params - The params for getUsersComplianceStream
     * @param request_options - Customize the options for this request
     */
-    getUsersComplianceStream: (
-      params: TwitterParams<getUsersComplianceStream>,
-      request_options?: Partial<RequestOptions>
-    ): AsyncGenerator<TwitterResponse<getUsersComplianceStream>> =>
-      stream<TwitterResponse<getUsersComplianceStream>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/compliance/stream`,
-        params,
-        method: "GET",
-      }),
-  };
-  /**
-   * General
-   *
-   * Miscellaneous endpoints for general API functionality
-   *
-   * Find out more
-   * https://developer.twitter.com/en/docs/twitter-api
-   */
-  public readonly general = {
-    /**
+		getUsersComplianceStream: (
+			params: TwitterParams<getUsersComplianceStream>,
+			request_options?: Partial<RequestOptions>
+		): AsyncGenerator<TwitterResponse<getUsersComplianceStream>> =>
+			stream<TwitterResponse<getUsersComplianceStream>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/compliance/stream`,
+				params,
+				method: "GET",
+			}),
+	};
+	/**
+	 * General
+	 *
+	 * Miscellaneous endpoints for general API functionality
+	 *
+	 * Find out more
+	 * https://developer.twitter.com/en/docs/twitter-api
+	 */
+	public readonly general = {
+		/**
     * Returns the OpenAPI Specification document.
     *
 
     * Full OpenAPI Specification in JSON format. (See https://github.com/OAI/OpenAPI-Specification/blob/master/README.md)
     * @param request_options - Customize the options for this request
     */
-    getOpenApiSpec: (
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<getOpenApiSpec>> =>
-      rest<TwitterResponse<getOpenApiSpec>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/openapi.json`,
-        method: "GET",
-      }),
-  };
-  /**
-   * Lists
-   *
-   * Endpoints related to retrieving, managing Lists
-   *
-   * Find out more
-   * https://developer.twitter.com/en/docs/twitter-api/lists
-   */
-  public readonly lists = {
-    /**
+		getOpenApiSpec: (
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<getOpenApiSpec>> =>
+			rest<TwitterResponse<getOpenApiSpec>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/openapi.json`,
+				method: "GET",
+			}),
+	};
+	/**
+	 * Lists
+	 *
+	 * Endpoints related to retrieving, managing Lists
+	 *
+	 * Find out more
+	 * https://developer.twitter.com/en/docs/twitter-api/lists
+	 */
+	public readonly lists = {
+		/**
     * Create List
     *
 
@@ -378,20 +378,20 @@ export class Client {
     * @param request_body - The request_body for listIdCreate
     * @param request_options - Customize the options for this request
     */
-    listIdCreate: (
-      request_body: TwitterBody<listIdCreate>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listIdCreate>> =>
-      rest<TwitterResponse<listIdCreate>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/lists`,
-        request_body,
-        method: "POST",
-      }),
+		listIdCreate: (
+			request_body: TwitterBody<listIdCreate>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listIdCreate>> =>
+			rest<TwitterResponse<listIdCreate>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/lists`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Delete List
     *
 
@@ -399,19 +399,19 @@ export class Client {
     * @param id - The ID of the List to delete.
     * @param request_options - Customize the options for this request
     */
-    listIdDelete: (
-      id: string,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listIdDelete>> =>
-      rest<TwitterResponse<listIdDelete>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/lists/${id}`,
-        method: "DELETE",
-      }),
+		listIdDelete: (
+			id: string,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listIdDelete>> =>
+			rest<TwitterResponse<listIdDelete>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/lists/${id}`,
+				method: "DELETE",
+			}),
 
-    /**
+		/**
     * List lookup by List ID.
     *
 
@@ -420,21 +420,21 @@ export class Client {
     * @param params - The params for listIdGet
     * @param request_options - Customize the options for this request
     */
-    listIdGet: (
-      id: string,
-      params: TwitterParams<listIdGet> = {},
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listIdGet>> =>
-      rest<TwitterResponse<listIdGet>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/lists/${id}`,
-        params,
-        method: "GET",
-      }),
+		listIdGet: (
+			id: string,
+			params: TwitterParams<listIdGet> = {},
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listIdGet>> =>
+			rest<TwitterResponse<listIdGet>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/lists/${id}`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Update List.
     *
 
@@ -443,21 +443,21 @@ export class Client {
     * @param request_body - The request_body for listIdUpdate
     * @param request_options - Customize the options for this request
     */
-    listIdUpdate: (
-      id: string,
-      request_body: TwitterBody<listIdUpdate>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listIdUpdate>> =>
-      rest<TwitterResponse<listIdUpdate>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/lists/${id}`,
-        request_body,
-        method: "PUT",
-      }),
+		listIdUpdate: (
+			id: string,
+			request_body: TwitterBody<listIdUpdate>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listIdUpdate>> =>
+			rest<TwitterResponse<listIdUpdate>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/lists/${id}`,
+				request_body,
+				method: "PUT",
+			}),
 
-    /**
+		/**
     * Add a List member
     *
 
@@ -466,21 +466,21 @@ export class Client {
     * @param request_body - The request_body for listAddMember
     * @param request_options - Customize the options for this request
     */
-    listAddMember: (
-      id: string,
-      request_body: TwitterBody<listAddMember>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listAddMember>> =>
-      rest<TwitterResponse<listAddMember>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/lists/${id}/members`,
-        request_body,
-        method: "POST",
-      }),
+		listAddMember: (
+			id: string,
+			request_body: TwitterBody<listAddMember>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listAddMember>> =>
+			rest<TwitterResponse<listAddMember>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/lists/${id}/members`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Remove a List member
     *
 
@@ -489,20 +489,20 @@ export class Client {
     * @param user_id - The ID of User that will be removed from the List.
     * @param request_options - Customize the options for this request
     */
-    listRemoveMember: (
-      id: string,
-      user_id: string,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listRemoveMember>> =>
-      rest<TwitterResponse<listRemoveMember>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/lists/${id}/members/${user_id}`,
-        method: "DELETE",
-      }),
+		listRemoveMember: (
+			id: string,
+			user_id: string,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listRemoveMember>> =>
+			rest<TwitterResponse<listRemoveMember>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/lists/${id}/members/${user_id}`,
+				method: "DELETE",
+			}),
 
-    /**
+		/**
     * Get User's Followed Lists
     *
 
@@ -511,21 +511,21 @@ export class Client {
     * @param params - The params for userFollowedLists
     * @param request_options - Customize the options for this request
     */
-    userFollowedLists: (
-      id: string,
-      params: TwitterParams<userFollowedLists> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<userFollowedLists>> =>
-      paginate<TwitterResponse<userFollowedLists>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/followed_lists`,
-        params,
-        method: "GET",
-      }),
+		userFollowedLists: (
+			id: string,
+			params: TwitterParams<userFollowedLists> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<userFollowedLists>> =>
+			paginate<TwitterResponse<userFollowedLists>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/followed_lists`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Follow a List
     *
 
@@ -534,21 +534,21 @@ export class Client {
     * @param request_body - The request_body for listUserFollow
     * @param request_options - Customize the options for this request
     */
-    listUserFollow: (
-      id: string,
-      request_body: TwitterBody<listUserFollow>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listUserFollow>> =>
-      rest<TwitterResponse<listUserFollow>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/followed_lists`,
-        request_body,
-        method: "POST",
-      }),
+		listUserFollow: (
+			id: string,
+			request_body: TwitterBody<listUserFollow>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listUserFollow>> =>
+			rest<TwitterResponse<listUserFollow>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/followed_lists`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Unfollow a List
     *
 
@@ -557,20 +557,20 @@ export class Client {
     * @param list_id - The ID of the List to unfollow.
     * @param request_options - Customize the options for this request
     */
-    listUserUnfollow: (
-      id: string,
-      list_id: string,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listUserUnfollow>> =>
-      rest<TwitterResponse<listUserUnfollow>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/followed_lists/${list_id}`,
-        method: "DELETE",
-      }),
+		listUserUnfollow: (
+			id: string,
+			list_id: string,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listUserUnfollow>> =>
+			rest<TwitterResponse<listUserUnfollow>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/followed_lists/${list_id}`,
+				method: "DELETE",
+			}),
 
-    /**
+		/**
     * Get a User's List Memberships
     *
 
@@ -579,21 +579,21 @@ export class Client {
     * @param params - The params for getUserListMemberships
     * @param request_options - Customize the options for this request
     */
-    getUserListMemberships: (
-      id: string,
-      params: TwitterParams<getUserListMemberships> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<getUserListMemberships>> =>
-      paginate<TwitterResponse<getUserListMemberships>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/list_memberships`,
-        params,
-        method: "GET",
-      }),
+		getUserListMemberships: (
+			id: string,
+			params: TwitterParams<getUserListMemberships> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<getUserListMemberships>> =>
+			paginate<TwitterResponse<getUserListMemberships>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/list_memberships`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Get a User's Owned Lists.
     *
 
@@ -602,21 +602,21 @@ export class Client {
     * @param params - The params for listUserOwnedLists
     * @param request_options - Customize the options for this request
     */
-    listUserOwnedLists: (
-      id: string,
-      params: TwitterParams<listUserOwnedLists> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<listUserOwnedLists>> =>
-      paginate<TwitterResponse<listUserOwnedLists>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/owned_lists`,
-        params,
-        method: "GET",
-      }),
+		listUserOwnedLists: (
+			id: string,
+			params: TwitterParams<listUserOwnedLists> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<listUserOwnedLists>> =>
+			paginate<TwitterResponse<listUserOwnedLists>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/owned_lists`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Get a User's Pinned Lists
     *
 
@@ -625,21 +625,21 @@ export class Client {
     * @param params - The params for listUserPinnedLists
     * @param request_options - Customize the options for this request
     */
-    listUserPinnedLists: (
-      id: string,
-      params: TwitterParams<listUserPinnedLists> = {},
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listUserPinnedLists>> =>
-      rest<TwitterResponse<listUserPinnedLists>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/pinned_lists`,
-        params,
-        method: "GET",
-      }),
+		listUserPinnedLists: (
+			id: string,
+			params: TwitterParams<listUserPinnedLists> = {},
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listUserPinnedLists>> =>
+			rest<TwitterResponse<listUserPinnedLists>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/pinned_lists`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Pin a List
     *
 
@@ -648,21 +648,21 @@ export class Client {
     * @param request_body - The request_body for listUserPin
     * @param request_options - Customize the options for this request
     */
-    listUserPin: (
-      id: string,
-      request_body: TwitterBody<listUserPin>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listUserPin>> =>
-      rest<TwitterResponse<listUserPin>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/pinned_lists`,
-        request_body,
-        method: "POST",
-      }),
+		listUserPin: (
+			id: string,
+			request_body: TwitterBody<listUserPin>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listUserPin>> =>
+			rest<TwitterResponse<listUserPin>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/pinned_lists`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Unpin a List
     *
 
@@ -671,29 +671,29 @@ export class Client {
     * @param list_id - The ID of the List to unpin.
     * @param request_options - Customize the options for this request
     */
-    listUserUnpin: (
-      id: string,
-      list_id: string,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<listUserUnpin>> =>
-      rest<TwitterResponse<listUserUnpin>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/pinned_lists/${list_id}`,
-        method: "DELETE",
-      }),
-  };
-  /**
-   * Spaces
-   *
-   * Endpoints related to retrieving, managing Spaces
-   *
-   * Find out more
-   * https://developer.twitter.com/en/docs/twitter-api/spaces
-   */
-  public readonly spaces = {
-    /**
+		listUserUnpin: (
+			id: string,
+			list_id: string,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<listUserUnpin>> =>
+			rest<TwitterResponse<listUserUnpin>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/pinned_lists/${list_id}`,
+				method: "DELETE",
+			}),
+	};
+	/**
+	 * Spaces
+	 *
+	 * Endpoints related to retrieving, managing Spaces
+	 *
+	 * Find out more
+	 * https://developer.twitter.com/en/docs/twitter-api/spaces
+	 */
+	public readonly spaces = {
+		/**
     * Space lookup up Space IDs
     *
 
@@ -701,20 +701,20 @@ export class Client {
     * @param params - The params for findSpacesByIds
     * @param request_options - Customize the options for this request
     */
-    findSpacesByIds: (
-      params: TwitterParams<findSpacesByIds>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<findSpacesByIds>> =>
-      rest<TwitterResponse<findSpacesByIds>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/spaces`,
-        params,
-        method: "GET",
-      }),
+		findSpacesByIds: (
+			params: TwitterParams<findSpacesByIds>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<findSpacesByIds>> =>
+			rest<TwitterResponse<findSpacesByIds>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/spaces`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Space lookup by their creators
     *
 
@@ -722,20 +722,20 @@ export class Client {
     * @param params - The params for findSpacesByCreatorIds
     * @param request_options - Customize the options for this request
     */
-    findSpacesByCreatorIds: (
-      params: TwitterParams<findSpacesByCreatorIds>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<findSpacesByCreatorIds>> =>
-      rest<TwitterResponse<findSpacesByCreatorIds>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/spaces/by/creator_ids`,
-        params,
-        method: "GET",
-      }),
+		findSpacesByCreatorIds: (
+			params: TwitterParams<findSpacesByCreatorIds>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<findSpacesByCreatorIds>> =>
+			rest<TwitterResponse<findSpacesByCreatorIds>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/spaces/by/creator_ids`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Search for Spaces
     *
 
@@ -743,20 +743,20 @@ export class Client {
     * @param params - The params for searchSpaces
     * @param request_options - Customize the options for this request
     */
-    searchSpaces: (
-      params: TwitterParams<searchSpaces>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<searchSpaces>> =>
-      rest<TwitterResponse<searchSpaces>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/spaces/search`,
-        params,
-        method: "GET",
-      }),
+		searchSpaces: (
+			params: TwitterParams<searchSpaces>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<searchSpaces>> =>
+			rest<TwitterResponse<searchSpaces>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/spaces/search`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Space lookup by Space ID
     *
 
@@ -765,21 +765,21 @@ export class Client {
     * @param params - The params for findSpaceById
     * @param request_options - Customize the options for this request
     */
-    findSpaceById: (
-      id: string,
-      params: TwitterParams<findSpaceById> = {},
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<findSpaceById>> =>
-      rest<TwitterResponse<findSpaceById>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/spaces/${id}`,
-        params,
-        method: "GET",
-      }),
+		findSpaceById: (
+			id: string,
+			params: TwitterParams<findSpaceById> = {},
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<findSpaceById>> =>
+			rest<TwitterResponse<findSpaceById>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/spaces/${id}`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Retrieve the list of Users who purchased a ticket to the given space
     *
 
@@ -788,21 +788,21 @@ export class Client {
     * @param params - The params for spaceBuyers
     * @param request_options - Customize the options for this request
     */
-    spaceBuyers: (
-      id: string,
-      params: TwitterParams<spaceBuyers> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<spaceBuyers>> =>
-      paginate<TwitterResponse<spaceBuyers>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/spaces/${id}/buyers`,
-        params,
-        method: "GET",
-      }),
+		spaceBuyers: (
+			id: string,
+			params: TwitterParams<spaceBuyers> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<spaceBuyers>> =>
+			paginate<TwitterResponse<spaceBuyers>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/spaces/${id}/buyers`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Retrieve Tweets from a Space.
     *
 
@@ -811,30 +811,30 @@ export class Client {
     * @param params - The params for spaceTweets
     * @param request_options - Customize the options for this request
     */
-    spaceTweets: (
-      id: string,
-      params: TwitterParams<spaceTweets> = {},
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<spaceTweets>> =>
-      rest<TwitterResponse<spaceTweets>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/spaces/${id}/tweets`,
-        params,
-        method: "GET",
-      }),
-  };
-  /**
-   * Tweets
-   *
-   * Endpoints related to retrieving, searching, and modifying Tweets
-   *
-   * Find out more
-   * https://developer.twitter.com/en/docs/twitter-api/tweets/lookup
-   */
-  public readonly tweets = {
-    /**
+		spaceTweets: (
+			id: string,
+			params: TwitterParams<spaceTweets> = {},
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<spaceTweets>> =>
+			rest<TwitterResponse<spaceTweets>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/spaces/${id}/tweets`,
+				params,
+				method: "GET",
+			}),
+	};
+	/**
+	 * Tweets
+	 *
+	 * Endpoints related to retrieving, searching, and modifying Tweets
+	 *
+	 * Find out more
+	 * https://developer.twitter.com/en/docs/twitter-api/tweets/lookup
+	 */
+	public readonly tweets = {
+		/**
     * List Tweets timeline by List ID.
     *
 
@@ -843,21 +843,21 @@ export class Client {
     * @param params - The params for listsIdTweets
     * @param request_options - Customize the options for this request
     */
-    listsIdTweets: (
-      id: string,
-      params: TwitterParams<listsIdTweets> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<listsIdTweets>> =>
-      paginate<TwitterResponse<listsIdTweets>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/lists/${id}/tweets`,
-        params,
-        method: "GET",
-      }),
+		listsIdTweets: (
+			id: string,
+			params: TwitterParams<listsIdTweets> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<listsIdTweets>> =>
+			paginate<TwitterResponse<listsIdTweets>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/lists/${id}/tweets`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Tweet lookup by Tweet IDs
     *
 
@@ -865,20 +865,20 @@ export class Client {
     * @param params - The params for findTweetsById
     * @param request_options - Customize the options for this request
     */
-    findTweetsById: (
-      params: TwitterParams<findTweetsById>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<findTweetsById>> =>
-      rest<TwitterResponse<findTweetsById>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets`,
-        params,
-        method: "GET",
-      }),
+		findTweetsById: (
+			params: TwitterParams<findTweetsById>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<findTweetsById>> =>
+			rest<TwitterResponse<findTweetsById>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Creation of a Tweet
     *
 
@@ -886,20 +886,20 @@ export class Client {
     * @param request_body - The request_body for createTweet
     * @param request_options - Customize the options for this request
     */
-    createTweet: (
-      request_body: TwitterBody<createTweet>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<createTweet>> =>
-      rest<TwitterResponse<createTweet>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets`,
-        request_body,
-        method: "POST",
-      }),
+		createTweet: (
+			request_body: TwitterBody<createTweet>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<createTweet>> =>
+			rest<TwitterResponse<createTweet>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Full archive search counts
     *
 
@@ -907,22 +907,22 @@ export class Client {
     * @param params - The params for tweetCountsFullArchiveSearch
     * @param request_options - Customize the options for this request
     */
-    tweetCountsFullArchiveSearch: (
-      params: TwitterParams<tweetCountsFullArchiveSearch>,
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<
-      TwitterResponse<tweetCountsFullArchiveSearch>
-    > =>
-      paginate<TwitterResponse<tweetCountsFullArchiveSearch>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/counts/all`,
-        params,
-        method: "GET",
-      }),
+		tweetCountsFullArchiveSearch: (
+			params: TwitterParams<tweetCountsFullArchiveSearch>,
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<
+			TwitterResponse<tweetCountsFullArchiveSearch>
+		> =>
+			paginate<TwitterResponse<tweetCountsFullArchiveSearch>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/counts/all`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Recent search counts
     *
 
@@ -930,20 +930,20 @@ export class Client {
     * @param params - The params for tweetCountsRecentSearch
     * @param request_options - Customize the options for this request
     */
-    tweetCountsRecentSearch: (
-      params: TwitterParams<tweetCountsRecentSearch>,
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<tweetCountsRecentSearch>> =>
-      paginate<TwitterResponse<tweetCountsRecentSearch>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/counts/recent`,
-        params,
-        method: "GET",
-      }),
+		tweetCountsRecentSearch: (
+			params: TwitterParams<tweetCountsRecentSearch>,
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<tweetCountsRecentSearch>> =>
+			paginate<TwitterResponse<tweetCountsRecentSearch>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/counts/recent`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Firehose stream
     *
 
@@ -951,20 +951,20 @@ export class Client {
     * @param params - The params for getTweetsFirehoseStream
     * @param request_options - Customize the options for this request
     */
-    getTweetsFirehoseStream: (
-      params: TwitterParams<getTweetsFirehoseStream>,
-      request_options?: Partial<RequestOptions>
-    ): AsyncGenerator<TwitterResponse<getTweetsFirehoseStream>> =>
-      stream<TwitterResponse<getTweetsFirehoseStream>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/firehose/stream`,
-        params,
-        method: "GET",
-      }),
+		getTweetsFirehoseStream: (
+			params: TwitterParams<getTweetsFirehoseStream>,
+			request_options?: Partial<RequestOptions>
+		): AsyncGenerator<TwitterResponse<getTweetsFirehoseStream>> =>
+			stream<TwitterResponse<getTweetsFirehoseStream>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/firehose/stream`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Sample stream
     *
 
@@ -972,20 +972,20 @@ export class Client {
     * @param params - The params for sampleStream
     * @param request_options - Customize the options for this request
     */
-    sampleStream: (
-      params: TwitterParams<sampleStream> = {},
-      request_options?: Partial<RequestOptions>
-    ): AsyncGenerator<TwitterResponse<sampleStream>> =>
-      stream<TwitterResponse<sampleStream>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/sample/stream`,
-        params,
-        method: "GET",
-      }),
+		sampleStream: (
+			params: TwitterParams<sampleStream> = {},
+			request_options?: Partial<RequestOptions>
+		): AsyncGenerator<TwitterResponse<sampleStream>> =>
+			stream<TwitterResponse<sampleStream>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/sample/stream`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Sample 10% stream
     *
 
@@ -993,20 +993,20 @@ export class Client {
     * @param params - The params for getTweetsSample10Stream
     * @param request_options - Customize the options for this request
     */
-    getTweetsSample10Stream: (
-      params: TwitterParams<getTweetsSample10Stream>,
-      request_options?: Partial<RequestOptions>
-    ): AsyncGenerator<TwitterResponse<getTweetsSample10Stream>> =>
-      stream<TwitterResponse<getTweetsSample10Stream>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/sample10/stream`,
-        params,
-        method: "GET",
-      }),
+		getTweetsSample10Stream: (
+			params: TwitterParams<getTweetsSample10Stream>,
+			request_options?: Partial<RequestOptions>
+		): AsyncGenerator<TwitterResponse<getTweetsSample10Stream>> =>
+			stream<TwitterResponse<getTweetsSample10Stream>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/sample10/stream`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Full-archive search
     *
 
@@ -1014,20 +1014,20 @@ export class Client {
     * @param params - The params for tweetsFullarchiveSearch
     * @param request_options - Customize the options for this request
     */
-    tweetsFullarchiveSearch: (
-      params: TwitterParams<tweetsFullarchiveSearch>,
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<tweetsFullarchiveSearch>> =>
-      paginate<TwitterResponse<tweetsFullarchiveSearch>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/search/all`,
-        params,
-        method: "GET",
-      }),
+		tweetsFullarchiveSearch: (
+			params: TwitterParams<tweetsFullarchiveSearch>,
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<tweetsFullarchiveSearch>> =>
+			paginate<TwitterResponse<tweetsFullarchiveSearch>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/search/all`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Recent search
     *
 
@@ -1035,20 +1035,20 @@ export class Client {
     * @param params - The params for tweetsRecentSearch
     * @param request_options - Customize the options for this request
     */
-    tweetsRecentSearch: (
-      params: TwitterParams<tweetsRecentSearch>,
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<tweetsRecentSearch>> =>
-      paginate<TwitterResponse<tweetsRecentSearch>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/search/recent`,
-        params,
-        method: "GET",
-      }),
+		tweetsRecentSearch: (
+			params: TwitterParams<tweetsRecentSearch>,
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<tweetsRecentSearch>> =>
+			paginate<TwitterResponse<tweetsRecentSearch>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/search/recent`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Filtered stream
     *
 
@@ -1056,20 +1056,20 @@ export class Client {
     * @param params - The params for searchStream
     * @param request_options - Customize the options for this request
     */
-    searchStream: (
-      params: TwitterParams<searchStream> = {},
-      request_options?: Partial<RequestOptions>
-    ): AsyncGenerator<TwitterResponse<searchStream>> =>
-      stream<TwitterResponse<searchStream>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/search/stream`,
-        params,
-        method: "GET",
-      }),
+		searchStream: (
+			params: TwitterParams<searchStream> = {},
+			request_options?: Partial<RequestOptions>
+		): AsyncGenerator<TwitterResponse<searchStream>> =>
+			stream<TwitterResponse<searchStream>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/search/stream`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Rules lookup
     *
 
@@ -1077,20 +1077,20 @@ export class Client {
     * @param params - The params for getRules
     * @param request_options - Customize the options for this request
     */
-    getRules: (
-      params: TwitterParams<getRules> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<getRules>> =>
-      paginate<TwitterResponse<getRules>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/search/stream/rules`,
-        params,
-        method: "GET",
-      }),
+		getRules: (
+			params: TwitterParams<getRules> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<getRules>> =>
+			paginate<TwitterResponse<getRules>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/search/stream/rules`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Add/Delete rules
     *
 
@@ -1099,22 +1099,22 @@ export class Client {
     * @param request_body - The request_body for addOrDeleteRules
     * @param request_options - Customize the options for this request
     */
-    addOrDeleteRules: (
-      request_body: TwitterBody<addOrDeleteRules>,
-      params: TwitterParams<addOrDeleteRules> = {},
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<addOrDeleteRules>> =>
-      rest<TwitterResponse<addOrDeleteRules>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/search/stream/rules`,
-        params,
-        request_body,
-        method: "POST",
-      }),
+		addOrDeleteRules: (
+			request_body: TwitterBody<addOrDeleteRules>,
+			params: TwitterParams<addOrDeleteRules> = {},
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<addOrDeleteRules>> =>
+			rest<TwitterResponse<addOrDeleteRules>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/search/stream/rules`,
+				params,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Tweet delete by Tweet ID
     *
 
@@ -1122,19 +1122,19 @@ export class Client {
     * @param id - The ID of the Tweet to be deleted.
     * @param request_options - Customize the options for this request
     */
-    deleteTweetById: (
-      id: string,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<deleteTweetById>> =>
-      rest<TwitterResponse<deleteTweetById>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/${id}`,
-        method: "DELETE",
-      }),
+		deleteTweetById: (
+			id: string,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<deleteTweetById>> =>
+			rest<TwitterResponse<deleteTweetById>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/${id}`,
+				method: "DELETE",
+			}),
 
-    /**
+		/**
     * Tweet lookup by Tweet ID
     *
 
@@ -1143,21 +1143,21 @@ export class Client {
     * @param params - The params for findTweetById
     * @param request_options - Customize the options for this request
     */
-    findTweetById: (
-      id: string,
-      params: TwitterParams<findTweetById> = {},
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<findTweetById>> =>
-      rest<TwitterResponse<findTweetById>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/${id}`,
-        params,
-        method: "GET",
-      }),
+		findTweetById: (
+			id: string,
+			params: TwitterParams<findTweetById> = {},
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<findTweetById>> =>
+			rest<TwitterResponse<findTweetById>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/${id}`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Retrieve Tweets that quote a Tweet.
     *
 
@@ -1166,21 +1166,21 @@ export class Client {
     * @param params - The params for findTweetsThatQuoteATweet
     * @param request_options - Customize the options for this request
     */
-    findTweetsThatQuoteATweet: (
-      id: string,
-      params: TwitterParams<findTweetsThatQuoteATweet> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<findTweetsThatQuoteATweet>> =>
-      paginate<TwitterResponse<findTweetsThatQuoteATweet>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/${id}/quote_tweets`,
-        params,
-        method: "GET",
-      }),
+		findTweetsThatQuoteATweet: (
+			id: string,
+			params: TwitterParams<findTweetsThatQuoteATweet> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<findTweetsThatQuoteATweet>> =>
+			paginate<TwitterResponse<findTweetsThatQuoteATweet>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/${id}/quote_tweets`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Hide replies
     *
 
@@ -1189,21 +1189,21 @@ export class Client {
     * @param request_body - The request_body for hideReplyById
     * @param request_options - Customize the options for this request
     */
-    hideReplyById: (
-      tweet_id: string,
-      request_body: TwitterBody<hideReplyById>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<hideReplyById>> =>
-      rest<TwitterResponse<hideReplyById>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/${tweet_id}/hidden`,
-        request_body,
-        method: "PUT",
-      }),
+		hideReplyById: (
+			tweet_id: string,
+			request_body: TwitterBody<hideReplyById>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<hideReplyById>> =>
+			rest<TwitterResponse<hideReplyById>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/${tweet_id}/hidden`,
+				request_body,
+				method: "PUT",
+			}),
 
-    /**
+		/**
     * Returns Tweet objects liked by the provided User ID
     *
 
@@ -1212,21 +1212,21 @@ export class Client {
     * @param params - The params for usersIdLikedTweets
     * @param request_options - Customize the options for this request
     */
-    usersIdLikedTweets: (
-      id: string,
-      params: TwitterParams<usersIdLikedTweets> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<usersIdLikedTweets>> =>
-      paginate<TwitterResponse<usersIdLikedTweets>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/liked_tweets`,
-        params,
-        method: "GET",
-      }),
+		usersIdLikedTweets: (
+			id: string,
+			params: TwitterParams<usersIdLikedTweets> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<usersIdLikedTweets>> =>
+			paginate<TwitterResponse<usersIdLikedTweets>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/liked_tweets`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Causes the User (in the path) to like the specified Tweet
     *
 
@@ -1235,21 +1235,21 @@ export class Client {
     * @param request_body - The request_body for usersIdLike
     * @param request_options - Customize the options for this request
     */
-    usersIdLike: (
-      id: string,
-      request_body: TwitterBody<usersIdLike>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<usersIdLike>> =>
-      rest<TwitterResponse<usersIdLike>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/likes`,
-        request_body,
-        method: "POST",
-      }),
+		usersIdLike: (
+			id: string,
+			request_body: TwitterBody<usersIdLike>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<usersIdLike>> =>
+			rest<TwitterResponse<usersIdLike>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/likes`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Causes the User (in the path) to unlike the specified Tweet
     *
 
@@ -1258,20 +1258,20 @@ export class Client {
     * @param tweet_id - The ID of the Tweet that the User is requesting to unlike.
     * @param request_options - Customize the options for this request
     */
-    usersIdUnlike: (
-      id: string,
-      tweet_id: string,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<usersIdUnlike>> =>
-      rest<TwitterResponse<usersIdUnlike>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/likes/${tweet_id}`,
-        method: "DELETE",
-      }),
+		usersIdUnlike: (
+			id: string,
+			tweet_id: string,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<usersIdUnlike>> =>
+			rest<TwitterResponse<usersIdUnlike>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/likes/${tweet_id}`,
+				method: "DELETE",
+			}),
 
-    /**
+		/**
     * User mention timeline by User ID
     *
 
@@ -1280,21 +1280,21 @@ export class Client {
     * @param params - The params for usersIdMentions
     * @param request_options - Customize the options for this request
     */
-    usersIdMentions: (
-      id: string,
-      params: TwitterParams<usersIdMentions> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<usersIdMentions>> =>
-      paginate<TwitterResponse<usersIdMentions>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/mentions`,
-        params,
-        method: "GET",
-      }),
+		usersIdMentions: (
+			id: string,
+			params: TwitterParams<usersIdMentions> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<usersIdMentions>> =>
+			paginate<TwitterResponse<usersIdMentions>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/mentions`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Causes the User (in the path) to retweet the specified Tweet.
     *
 
@@ -1303,21 +1303,21 @@ export class Client {
     * @param request_body - The request_body for usersIdRetweets
     * @param request_options - Customize the options for this request
     */
-    usersIdRetweets: (
-      id: string,
-      request_body: TwitterBody<usersIdRetweets>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<usersIdRetweets>> =>
-      rest<TwitterResponse<usersIdRetweets>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/retweets`,
-        request_body,
-        method: "POST",
-      }),
+		usersIdRetweets: (
+			id: string,
+			request_body: TwitterBody<usersIdRetweets>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<usersIdRetweets>> =>
+			rest<TwitterResponse<usersIdRetweets>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/retweets`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Causes the User (in the path) to unretweet the specified Tweet
     *
 
@@ -1326,20 +1326,20 @@ export class Client {
     * @param source_tweet_id - The ID of the Tweet that the User is requesting to unretweet.
     * @param request_options - Customize the options for this request
     */
-    usersIdUnretweets: (
-      id: string,
-      source_tweet_id: string,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<usersIdUnretweets>> =>
-      rest<TwitterResponse<usersIdUnretweets>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/retweets/${source_tweet_id}`,
-        method: "DELETE",
-      }),
+		usersIdUnretweets: (
+			id: string,
+			source_tweet_id: string,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<usersIdUnretweets>> =>
+			rest<TwitterResponse<usersIdUnretweets>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/retweets/${source_tweet_id}`,
+				method: "DELETE",
+			}),
 
-    /**
+		/**
     * User home timeline by User ID
     *
 
@@ -1348,21 +1348,21 @@ export class Client {
     * @param params - The params for usersIdTimeline
     * @param request_options - Customize the options for this request
     */
-    usersIdTimeline: (
-      id: string,
-      params: TwitterParams<usersIdTimeline> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<usersIdTimeline>> =>
-      paginate<TwitterResponse<usersIdTimeline>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/timelines/reverse_chronological`,
-        params,
-        method: "GET",
-      }),
+		usersIdTimeline: (
+			id: string,
+			params: TwitterParams<usersIdTimeline> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<usersIdTimeline>> =>
+			paginate<TwitterResponse<usersIdTimeline>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/timelines/reverse_chronological`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * User Tweets timeline by User ID
     *
 
@@ -1371,30 +1371,30 @@ export class Client {
     * @param params - The params for usersIdTweets
     * @param request_options - Customize the options for this request
     */
-    usersIdTweets: (
-      id: string,
-      params: TwitterParams<usersIdTweets> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<usersIdTweets>> =>
-      paginate<TwitterResponse<usersIdTweets>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/tweets`,
-        params,
-        method: "GET",
-      }),
-  };
-  /**
-   * Users
-   *
-   * Endpoints related to retrieving, managing relationships of Users
-   *
-   * Find out more
-   * https://developer.twitter.com/en/docs/twitter-api/users/lookup
-   */
-  public readonly users = {
-    /**
+		usersIdTweets: (
+			id: string,
+			params: TwitterParams<usersIdTweets> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<usersIdTweets>> =>
+			paginate<TwitterResponse<usersIdTweets>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/tweets`,
+				params,
+				method: "GET",
+			}),
+	};
+	/**
+	 * Users
+	 *
+	 * Endpoints related to retrieving, managing relationships of Users
+	 *
+	 * Find out more
+	 * https://developer.twitter.com/en/docs/twitter-api/users/lookup
+	 */
+	public readonly users = {
+		/**
     * Returns User objects that follow a List by the provided List ID
     *
 
@@ -1403,21 +1403,21 @@ export class Client {
     * @param params - The params for listGetFollowers
     * @param request_options - Customize the options for this request
     */
-    listGetFollowers: (
-      id: string,
-      params: TwitterParams<listGetFollowers> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<listGetFollowers>> =>
-      paginate<TwitterResponse<listGetFollowers>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/lists/${id}/followers`,
-        params,
-        method: "GET",
-      }),
+		listGetFollowers: (
+			id: string,
+			params: TwitterParams<listGetFollowers> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<listGetFollowers>> =>
+			paginate<TwitterResponse<listGetFollowers>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/lists/${id}/followers`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Returns User objects that are members of a List by the provided List ID.
     *
 
@@ -1426,21 +1426,21 @@ export class Client {
     * @param params - The params for listGetMembers
     * @param request_options - Customize the options for this request
     */
-    listGetMembers: (
-      id: string,
-      params: TwitterParams<listGetMembers> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<listGetMembers>> =>
-      paginate<TwitterResponse<listGetMembers>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/lists/${id}/members`,
-        params,
-        method: "GET",
-      }),
+		listGetMembers: (
+			id: string,
+			params: TwitterParams<listGetMembers> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<listGetMembers>> =>
+			paginate<TwitterResponse<listGetMembers>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/lists/${id}/members`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Returns User objects that have liked the provided Tweet ID
     *
 
@@ -1449,21 +1449,21 @@ export class Client {
     * @param params - The params for tweetsIdLikingUsers
     * @param request_options - Customize the options for this request
     */
-    tweetsIdLikingUsers: (
-      id: string,
-      params: TwitterParams<tweetsIdLikingUsers> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<tweetsIdLikingUsers>> =>
-      paginate<TwitterResponse<tweetsIdLikingUsers>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/${id}/liking_users`,
-        params,
-        method: "GET",
-      }),
+		tweetsIdLikingUsers: (
+			id: string,
+			params: TwitterParams<tweetsIdLikingUsers> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<tweetsIdLikingUsers>> =>
+			paginate<TwitterResponse<tweetsIdLikingUsers>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/${id}/liking_users`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Returns User objects that have retweeted the provided Tweet ID
     *
 
@@ -1472,21 +1472,21 @@ export class Client {
     * @param params - The params for tweetsIdRetweetingUsers
     * @param request_options - Customize the options for this request
     */
-    tweetsIdRetweetingUsers: (
-      id: string,
-      params: TwitterParams<tweetsIdRetweetingUsers> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<tweetsIdRetweetingUsers>> =>
-      paginate<TwitterResponse<tweetsIdRetweetingUsers>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/tweets/${id}/retweeted_by`,
-        params,
-        method: "GET",
-      }),
+		tweetsIdRetweetingUsers: (
+			id: string,
+			params: TwitterParams<tweetsIdRetweetingUsers> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<tweetsIdRetweetingUsers>> =>
+			paginate<TwitterResponse<tweetsIdRetweetingUsers>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/tweets/${id}/retweeted_by`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * User lookup by IDs
     *
 
@@ -1494,20 +1494,20 @@ export class Client {
     * @param params - The params for findUsersById
     * @param request_options - Customize the options for this request
     */
-    findUsersById: (
-      params: TwitterParams<findUsersById>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<findUsersById>> =>
-      rest<TwitterResponse<findUsersById>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users`,
-        params,
-        method: "GET",
-      }),
+		findUsersById: (
+			params: TwitterParams<findUsersById>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<findUsersById>> =>
+			rest<TwitterResponse<findUsersById>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * User lookup by usernames
     *
 
@@ -1515,20 +1515,20 @@ export class Client {
     * @param params - The params for findUsersByUsername
     * @param request_options - Customize the options for this request
     */
-    findUsersByUsername: (
-      params: TwitterParams<findUsersByUsername>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<findUsersByUsername>> =>
-      rest<TwitterResponse<findUsersByUsername>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/by`,
-        params,
-        method: "GET",
-      }),
+		findUsersByUsername: (
+			params: TwitterParams<findUsersByUsername>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<findUsersByUsername>> =>
+			rest<TwitterResponse<findUsersByUsername>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/by`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * User lookup by username
     *
 
@@ -1537,21 +1537,21 @@ export class Client {
     * @param params - The params for findUserByUsername
     * @param request_options - Customize the options for this request
     */
-    findUserByUsername: (
-      username: string,
-      params: TwitterParams<findUserByUsername> = {},
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<findUserByUsername>> =>
-      rest<TwitterResponse<findUserByUsername>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/by/username/${username}`,
-        params,
-        method: "GET",
-      }),
+		findUserByUsername: (
+			username: string,
+			params: TwitterParams<findUserByUsername> = {},
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<findUserByUsername>> =>
+			rest<TwitterResponse<findUserByUsername>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/by/username/${username}`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * User lookup me
     *
 
@@ -1559,20 +1559,20 @@ export class Client {
     * @param params - The params for findMyUser
     * @param request_options - Customize the options for this request
     */
-    findMyUser: (
-      params: TwitterParams<findMyUser> = {},
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<findMyUser>> =>
-      rest<TwitterResponse<findMyUser>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/me`,
-        params,
-        method: "GET",
-      }),
+		findMyUser: (
+			params: TwitterParams<findMyUser> = {},
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<findMyUser>> =>
+			rest<TwitterResponse<findMyUser>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/me`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * User lookup by ID
     *
 
@@ -1581,21 +1581,21 @@ export class Client {
     * @param params - The params for findUserById
     * @param request_options - Customize the options for this request
     */
-    findUserById: (
-      id: string,
-      params: TwitterParams<findUserById> = {},
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<findUserById>> =>
-      rest<TwitterResponse<findUserById>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}`,
-        params,
-        method: "GET",
-      }),
+		findUserById: (
+			id: string,
+			params: TwitterParams<findUserById> = {},
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<findUserById>> =>
+			rest<TwitterResponse<findUserById>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Returns User objects that are blocked by provided User ID
     *
 
@@ -1604,21 +1604,21 @@ export class Client {
     * @param params - The params for usersIdBlocking
     * @param request_options - Customize the options for this request
     */
-    usersIdBlocking: (
-      id: string,
-      params: TwitterParams<usersIdBlocking> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<usersIdBlocking>> =>
-      paginate<TwitterResponse<usersIdBlocking>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/blocking`,
-        params,
-        method: "GET",
-      }),
+		usersIdBlocking: (
+			id: string,
+			params: TwitterParams<usersIdBlocking> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<usersIdBlocking>> =>
+			paginate<TwitterResponse<usersIdBlocking>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/blocking`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Block User by User ID
     *
 
@@ -1627,21 +1627,21 @@ export class Client {
     * @param request_body - The request_body for usersIdBlock
     * @param request_options - Customize the options for this request
     */
-    usersIdBlock: (
-      id: string,
-      request_body: TwitterBody<usersIdBlock>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<usersIdBlock>> =>
-      rest<TwitterResponse<usersIdBlock>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/blocking`,
-        request_body,
-        method: "POST",
-      }),
+		usersIdBlock: (
+			id: string,
+			request_body: TwitterBody<usersIdBlock>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<usersIdBlock>> =>
+			rest<TwitterResponse<usersIdBlock>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/blocking`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Followers by User ID
     *
 
@@ -1650,21 +1650,21 @@ export class Client {
     * @param params - The params for usersIdFollowers
     * @param request_options - Customize the options for this request
     */
-    usersIdFollowers: (
-      id: string,
-      params: TwitterParams<usersIdFollowers> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<usersIdFollowers>> =>
-      paginate<TwitterResponse<usersIdFollowers>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/followers`,
-        params,
-        method: "GET",
-      }),
+		usersIdFollowers: (
+			id: string,
+			params: TwitterParams<usersIdFollowers> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<usersIdFollowers>> =>
+			paginate<TwitterResponse<usersIdFollowers>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/followers`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Following by User ID
     *
 
@@ -1673,21 +1673,21 @@ export class Client {
     * @param params - The params for usersIdFollowing
     * @param request_options - Customize the options for this request
     */
-    usersIdFollowing: (
-      id: string,
-      params: TwitterParams<usersIdFollowing> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<usersIdFollowing>> =>
-      paginate<TwitterResponse<usersIdFollowing>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/following`,
-        params,
-        method: "GET",
-      }),
+		usersIdFollowing: (
+			id: string,
+			params: TwitterParams<usersIdFollowing> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<usersIdFollowing>> =>
+			paginate<TwitterResponse<usersIdFollowing>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/following`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Follow User
     *
 
@@ -1696,21 +1696,21 @@ export class Client {
     * @param request_body - The request_body for usersIdFollow
     * @param request_options - Customize the options for this request
     */
-    usersIdFollow: (
-      id: string,
-      request_body: TwitterBody<usersIdFollow>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<usersIdFollow>> =>
-      rest<TwitterResponse<usersIdFollow>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/following`,
-        request_body,
-        method: "POST",
-      }),
+		usersIdFollow: (
+			id: string,
+			request_body: TwitterBody<usersIdFollow>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<usersIdFollow>> =>
+			rest<TwitterResponse<usersIdFollow>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/following`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Returns User objects that are muted by the provided User ID
     *
 
@@ -1719,21 +1719,21 @@ export class Client {
     * @param params - The params for usersIdMuting
     * @param request_options - Customize the options for this request
     */
-    usersIdMuting: (
-      id: string,
-      params: TwitterParams<usersIdMuting> = {},
-      request_options?: Partial<RequestOptions>
-    ): TwitterPaginatedResponse<TwitterResponse<usersIdMuting>> =>
-      paginate<TwitterResponse<usersIdMuting>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/muting`,
-        params,
-        method: "GET",
-      }),
+		usersIdMuting: (
+			id: string,
+			params: TwitterParams<usersIdMuting> = {},
+			request_options?: Partial<RequestOptions>
+		): TwitterPaginatedResponse<TwitterResponse<usersIdMuting>> =>
+			paginate<TwitterResponse<usersIdMuting>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/muting`,
+				params,
+				method: "GET",
+			}),
 
-    /**
+		/**
     * Mute User by User ID.
     *
 
@@ -1742,21 +1742,21 @@ export class Client {
     * @param request_body - The request_body for usersIdMute
     * @param request_options - Customize the options for this request
     */
-    usersIdMute: (
-      id: string,
-      request_body: TwitterBody<usersIdMute>,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<usersIdMute>> =>
-      rest<TwitterResponse<usersIdMute>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${id}/muting`,
-        request_body,
-        method: "POST",
-      }),
+		usersIdMute: (
+			id: string,
+			request_body: TwitterBody<usersIdMute>,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<usersIdMute>> =>
+			rest<TwitterResponse<usersIdMute>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${id}/muting`,
+				request_body,
+				method: "POST",
+			}),
 
-    /**
+		/**
     * Unblock User by User ID
     *
 
@@ -1765,20 +1765,20 @@ export class Client {
     * @param target_user_id - The ID of the User that the source User is requesting to unblock.
     * @param request_options - Customize the options for this request
     */
-    usersIdUnblock: (
-      source_user_id: string,
-      target_user_id: string,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<usersIdUnblock>> =>
-      rest<TwitterResponse<usersIdUnblock>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${source_user_id}/blocking/${target_user_id}`,
-        method: "DELETE",
-      }),
+		usersIdUnblock: (
+			source_user_id: string,
+			target_user_id: string,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<usersIdUnblock>> =>
+			rest<TwitterResponse<usersIdUnblock>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${source_user_id}/blocking/${target_user_id}`,
+				method: "DELETE",
+			}),
 
-    /**
+		/**
     * Unfollow User
     *
 
@@ -1787,20 +1787,20 @@ export class Client {
     * @param target_user_id - The ID of the User that the source User is requesting to unfollow.
     * @param request_options - Customize the options for this request
     */
-    usersIdUnfollow: (
-      source_user_id: string,
-      target_user_id: string,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<usersIdUnfollow>> =>
-      rest<TwitterResponse<usersIdUnfollow>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${source_user_id}/following/${target_user_id}`,
-        method: "DELETE",
-      }),
+		usersIdUnfollow: (
+			source_user_id: string,
+			target_user_id: string,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<usersIdUnfollow>> =>
+			rest<TwitterResponse<usersIdUnfollow>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${source_user_id}/following/${target_user_id}`,
+				method: "DELETE",
+			}),
 
-    /**
+		/**
     * Unmute User by User ID
     *
 
@@ -1809,17 +1809,17 @@ export class Client {
     * @param target_user_id - The ID of the User that the source User is requesting to unmute.
     * @param request_options - Customize the options for this request
     */
-    usersIdUnmute: (
-      source_user_id: string,
-      target_user_id: string,
-      request_options?: Partial<RequestOptions>
-    ): Promise<TwitterResponse<usersIdUnmute>> =>
-      rest<TwitterResponse<usersIdUnmute>>({
-        auth: this.#auth,
-        ...this.#defaultRequestOptions,
-        ...request_options,
-        endpoint: `/2/users/${source_user_id}/muting/${target_user_id}`,
-        method: "DELETE",
-      }),
-  };
+		usersIdUnmute: (
+			source_user_id: string,
+			target_user_id: string,
+			request_options?: Partial<RequestOptions>
+		): Promise<TwitterResponse<usersIdUnmute>> =>
+			rest<TwitterResponse<usersIdUnmute>>({
+				auth: this.#auth,
+				...this.#defaultRequestOptions,
+				...request_options,
+				endpoint: `/2/users/${source_user_id}/muting/${target_user_id}`,
+				method: "DELETE",
+			}),
+	};
 }
