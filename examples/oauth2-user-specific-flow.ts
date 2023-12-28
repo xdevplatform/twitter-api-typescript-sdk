@@ -17,7 +17,7 @@ app.use(session({
   cookie: { secure: true }
 }));
 
-function createAuthClient(session) {
+function createAuthClient() {
   return new auth.OAuth2User({
     client_id: "",
     client_secret: "",
