@@ -14,65 +14,75 @@ app.use(session({
   secret: "secret-key",
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true }
+  cookie: { 
+    secure: false,
+    httpOnly: true
+  }
 }));
 
-function createAuthClient() {
-  return new auth.OAuth2User({
-    client_id: "",
-    client_secret: "",
-    callback: "",
-    scopes: ["tweet.read", "users.read", "offline.access"]
+const authClient = new auth.OAuth2User({
+  client_id: process.env.CLIENT_ID as string,
+  client_secret: process.env.CLIENT_SECRET as string,
+  callback: "http://127.0.0.1:3000/callback",
+  scopes: ["tweet.read", "users.read", "offline.access"],
+});
+
+const client = new Client(authClient);
+
+const STATE = "my-state";
+
+app.get("/callback", async function (req, res) {
+  try {
+    const { code, state } = req.query;
+    if (state !== req.session.state) {
+      return res.status(400).send("Invalid state parameter");
+    }
+  
+    await authClient.requestAccessToken(code as string);
+    req.session.oauthTokens = {
+      access_token: authClient.credentials.access_token,
+      refresh_token: authClient.credentials.refresh_token
+    };
+  
+    res.redirect("/tweets");
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.get("/login", async function (req, res) {
+  const authUrl = authClient.generateAuthURL({
+    state: req.session.state,
+    code_challenge_method: "s256",
   });
-}
+  res.redirect(authUrl);
+});
 
-// const authClient = new auth.OAuth2User({
-//   client_id: process.env.CLIENT_ID as string,
-//   client_secret: process.env.CLIENT_SECRET as string,
-//   callback: "http://127.0.0.1:3000/callback",
-//   scopes: ["tweet.read", "users.read", "offline.access"],
-// });
+app.get("/tweets", async function (req, res) {
+  try {
+    if (!req.session.oauthTokens) {
+      return res.status(401).send("Not authenticated");
+    }
 
-// const client = new Client(authClient);
+    const userClient = new Client({
+      bearer_token: req.session.oauthTokens.access_token
+    })
 
-// const STATE = "my-state";
+    const tweets = await userClient.tweets.findTweetById("20");
+    res.send(tweets);
+  } catch (error) {
+    console.log("tweets error", error);
+  }
+});
 
-// app.get("/callback", async function (req, res) {
-//   try {
-//     const { code, state } = req.query;
-//     if (state !== STATE) return res.status(500).send("State isn't matching");
-//     await authClient.requestAccessToken(code as string);
-//     res.redirect("/tweets");
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-
-// app.get("/login", async function (req, res) {
-//   const authUrl = authClient.generateAuthURL({
-//     state: STATE,
-//     code_challenge_method: "s256",
-//   });
-//   res.redirect(authUrl);
-// });
-
-// app.get("/tweets", async function (req, res) {
-//   try {
-//     const tweets = await client.tweets.findTweetById("20");
-//     res.send(tweets);
-//   } catch (error) {
-//     console.log("tweets error", error);
-//   }
-// });
-
-// app.get("/revoke", async function (req, res) {
-//   try {
-//     const response = await authClient.revokeAccessToken();
-//     res.send(response);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
+app.get("/revoke", async function (req, res) {
+  try {
+    const response = await authClient.revokeAccessToken();
+    res.send(response);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 app.listen(3000, () => {
   console.log(`Go here to login: http://127.0.0.1:3000/login`);
