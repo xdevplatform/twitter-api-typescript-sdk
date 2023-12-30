@@ -5,6 +5,7 @@ import { Client, auth } from "twitter-api-sdk";
 import express from "express";
 import session from "express-session";
 import dotenv from "dotenv";
+import crypto from 'crypto';
 
 dotenv.config();
 
@@ -29,7 +30,9 @@ const authClient = new auth.OAuth2User({
 
 const client = new Client(authClient);
 
-const STATE = "my-state";
+function generateRandomString() {
+  return crypto.randomBytes(16).toString('hex');
+}
 
 app.get("/callback", async function (req, res) {
   try {
@@ -51,10 +54,14 @@ app.get("/callback", async function (req, res) {
 });
 
 app.get("/login", async function (req, res) {
+  const state = generateRandomString();
+  req.session.state = state;
+
   const authUrl = authClient.generateAuthURL({
-    state: req.session.state,
+    state: state,
     code_challenge_method: "s256",
   });
+
   res.redirect(authUrl);
 });
 
