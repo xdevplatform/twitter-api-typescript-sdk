@@ -157,7 +157,7 @@ function buildClasses(classes: {
     if (name && description && externalDocs) {
       output += `\n/**\n* ${name}\n*\n* ${description}\n*\n* ${externalDocs.description}\n* ${externalDocs.url}\n*/\n`;
     }
-    output += `public readonly ${x} = {
+    output += `public readonly ${x.split(' ').join('_')} = {
       ${functions.join("\n,")}
     };`;
   });
@@ -255,7 +255,7 @@ import { OAuth2Bearer } from "../auth";\n\n`;
 
       if (!tags?.length) throw "No tags found";
       const tag = tags[0].toLowerCase();
-      classes[tag].functions.push(
+      classes[tag]?.functions.push(
         functionDocs(
           summary,
           description,
