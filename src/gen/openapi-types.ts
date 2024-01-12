@@ -17,6 +17,30 @@ export interface paths {
     /** Returns a single Compliance Job by ID */
     get: operations["getBatchComplianceJob"];
   };
+  "/2/dm_conversations": {
+    /** Creates a new DM Conversation. */
+    post: operations["dmConversationIdCreate"];
+  };
+  "/2/dm_conversations/with/{participant_id}/dm_events": {
+    /** Returns DM Events for a DM Conversation */
+    get: operations["getDmConversationsWithParticipantIdDmEvents"];
+  };
+  "/2/dm_conversations/with/{participant_id}/messages": {
+    /** Creates a new message for a DM Conversation with a participant user by ID */
+    post: operations["dmConversationWithUserEventIdCreate"];
+  };
+  "/2/dm_conversations/{dm_conversation_id}/messages": {
+    /** Creates a new message for a DM Conversation specified by DM Conversation ID */
+    post: operations["dmConversationByIdEventIdCreate"];
+  };
+  "/2/dm_conversations/{id}/dm_events": {
+    /** Returns DM Events for a DM Conversation */
+    get: operations["getDmConversationsIdDmEvents"];
+  };
+  "/2/dm_events": {
+    /** Returns recent DM Events across DM conversations */
+    get: operations["getDmEvents"];
+  };
   "/2/lists": {
     /** Creates a new List. */
     post: operations["listIdCreate"];
@@ -44,7 +68,7 @@ export interface paths {
     delete: operations["listRemoveMember"];
   };
   "/2/lists/{id}/tweets": {
-    /** Returns a list of Tweets associated with the provided List ID. */
+    /** Returns a list of Posts associated with the provided List ID. */
     get: operations["listsIdTweets"];
   };
   "/2/openapi.json": {
@@ -72,53 +96,73 @@ export interface paths {
     get: operations["spaceBuyers"];
   };
   "/2/spaces/{id}/tweets": {
-    /** Retrieves Tweets shared in the specified Space. */
+    /** Retrieves Posts shared in the specified Space. */
     get: operations["spaceTweets"];
   };
+  "/2/trends/by/woeid/{woeid}": {
+    /** Returns the Trend associated with the supplied WoeId. */
+    get: operations["getTrends"];
+  };
   "/2/tweets": {
-    /** Returns a variety of information about the Tweet specified by the requested ID. */
+    /** Returns a variety of information about the Post specified by the requested ID. */
     get: operations["findTweetsById"];
-    /** Causes the User to create a Tweet under the authorized account. */
+    /** Causes the User to create a Post under the authorized account. */
     post: operations["createTweet"];
   };
   "/2/tweets/compliance/stream": {
-    /** Streams 100% of compliance data for Tweets */
+    /** Streams 100% of compliance data for Posts */
     get: operations["getTweetsComplianceStream"];
   };
   "/2/tweets/counts/all": {
-    /** Returns Tweet Counts that match a search query. */
+    /** Returns Post Counts that match a search query. */
     get: operations["tweetCountsFullArchiveSearch"];
   };
   "/2/tweets/counts/recent": {
-    /** Returns Tweet Counts from the last 7 days that match a search query. */
+    /** Returns Post Counts from the last 7 days that match a search query. */
     get: operations["tweetCountsRecentSearch"];
   };
   "/2/tweets/firehose/stream": {
-    /** Streams 100% of public Tweets. */
+    /** Streams 100% of public Posts. */
     get: operations["getTweetsFirehoseStream"];
   };
+  "/2/tweets/firehose/stream/lang/en": {
+    /** Streams 100% of English Language public Posts. */
+    get: operations["getTweetsFirehoseStreamLangEn"];
+  };
+  "/2/tweets/firehose/stream/lang/ja": {
+    /** Streams 100% of Japanese Language public Posts. */
+    get: operations["getTweetsFirehoseStreamLangJa"];
+  };
+  "/2/tweets/firehose/stream/lang/ko": {
+    /** Streams 100% of Korean Language public Posts. */
+    get: operations["getTweetsFirehoseStreamLangKo"];
+  };
+  "/2/tweets/firehose/stream/lang/pt": {
+    /** Streams 100% of Portuguese Language public Posts. */
+    get: operations["getTweetsFirehoseStreamLangPt"];
+  };
   "/2/tweets/label/stream": {
-    /** Streams 100% of labeling events applied to Tweets */
+    /** Streams 100% of labeling events applied to Posts */
     get: operations["getTweetsLabelStream"];
   };
   "/2/tweets/sample/stream": {
-    /** Streams a deterministic 1% of public Tweets. */
+    /** Streams a deterministic 1% of public Posts. */
     get: operations["sampleStream"];
   };
   "/2/tweets/sample10/stream": {
-    /** Streams a deterministic 10% of public Tweets. */
+    /** Streams a deterministic 10% of public Posts. */
     get: operations["getTweetsSample10Stream"];
   };
   "/2/tweets/search/all": {
-    /** Returns Tweets that match a search query. */
+    /** Returns Posts that match a search query. */
     get: operations["tweetsFullarchiveSearch"];
   };
   "/2/tweets/search/recent": {
-    /** Returns Tweets from the last 7 days that match a search query. */
+    /** Returns Posts from the last 7 days that match a search query. */
     get: operations["tweetsRecentSearch"];
   };
   "/2/tweets/search/stream": {
-    /** Streams Tweets matching the stream's active rule set. */
+    /** Streams Posts matching the stream's active rule set. */
     get: operations["searchStream"];
   };
   "/2/tweets/search/stream/rules": {
@@ -127,27 +171,39 @@ export interface paths {
     /** Add or delete rules from a User's active rule set. Users can provide unique, optionally tagged rules to add. Users can delete their entire rule set or a subset specified by rule ids or values. */
     post: operations["addOrDeleteRules"];
   };
+  "/2/tweets/search/stream/rules/counts": {
+    /** Returns the counts of rules from a User's active rule set, to reflect usage by project and application. */
+    get: operations["getRuleCount"];
+  };
   "/2/tweets/{id}": {
-    /** Returns a variety of information about the Tweet specified by the requested ID. */
+    /** Returns a variety of information about the Post specified by the requested ID. */
     get: operations["findTweetById"];
-    /** Delete specified Tweet (in the path) by ID. */
+    /** Delete specified Post (in the path) by ID. */
     delete: operations["deleteTweetById"];
   };
   "/2/tweets/{id}/liking_users": {
-    /** Returns a list of Users that have liked the provided Tweet ID */
+    /** Returns a list of Users that have liked the provided Post ID */
     get: operations["tweetsIdLikingUsers"];
   };
   "/2/tweets/{id}/quote_tweets": {
-    /** Returns a variety of information about each Tweet that quotes the Tweet specified by the requested ID. */
+    /** Returns a variety of information about each Post that quotes the Post specified by the requested ID. */
     get: operations["findTweetsThatQuoteATweet"];
   };
   "/2/tweets/{id}/retweeted_by": {
-    /** Returns a list of Users that have retweeted the provided Tweet ID */
+    /** Returns a list of Users that have retweeted the provided Post ID */
     get: operations["tweetsIdRetweetingUsers"];
+  };
+  "/2/tweets/{id}/retweets": {
+    /** Returns a variety of information about each Post that has retweeted the Post specified by the requested ID. */
+    get: operations["findTweetsThatRetweetATweet"];
   };
   "/2/tweets/{tweet_id}/hidden": {
     /** Hides or unhides a reply to an owned conversation. */
     put: operations["hideReplyById"];
+  };
+  "/2/usage/tweets": {
+    /** Returns the Post Usage. */
+    get: operations["getUsageTweets"];
   };
   "/2/users": {
     /** This endpoint returns information about Users. Specify Users by their ID. */
@@ -169,6 +225,10 @@ export interface paths {
     /** This endpoint returns information about the requesting User. */
     get: operations["findMyUser"];
   };
+  "/2/users/search": {
+    /** Returns Users that match a search query. */
+    get: operations["searchUserByQuery"];
+  };
   "/2/users/{id}": {
     /** This endpoint returns information about a User. Specify User by ID. */
     get: operations["findUserById"];
@@ -176,17 +236,15 @@ export interface paths {
   "/2/users/{id}/blocking": {
     /** Returns a list of Users that are blocked by the provided User ID */
     get: operations["usersIdBlocking"];
-    /** Causes the User (in the path) to block the target User. The User (in the path) must match the User context authorizing the request */
-    post: operations["usersIdBlock"];
   };
   "/2/users/{id}/bookmarks": {
-    /** Returns Tweet objects that have been bookmarked by the requesting User */
+    /** Returns Post objects that have been bookmarked by the requesting User */
     get: operations["getUsersIdBookmarks"];
-    /** Adds a Tweet (ID in the body) to the requesting User's (in the path) bookmarks */
+    /** Adds a Post (ID in the body) to the requesting User's (in the path) bookmarks */
     post: operations["postUsersIdBookmarks"];
   };
   "/2/users/{id}/bookmarks/{tweet_id}": {
-    /** Removes a Tweet from the requesting User's bookmarked Tweets. */
+    /** Removes a Post from the requesting User's bookmarked Posts. */
     delete: operations["usersIdBookmarksDelete"];
   };
   "/2/users/{id}/followed_lists": {
@@ -210,15 +268,15 @@ export interface paths {
     post: operations["usersIdFollow"];
   };
   "/2/users/{id}/liked_tweets": {
-    /** Returns a list of Tweets liked by the provided User ID */
+    /** Returns a list of Posts liked by the provided User ID */
     get: operations["usersIdLikedTweets"];
   };
   "/2/users/{id}/likes": {
-    /** Causes the User (in the path) to like the specified Tweet. The User in the path must match the User context authorizing the request. */
+    /** Causes the User (in the path) to like the specified Post. The User in the path must match the User context authorizing the request. */
     post: operations["usersIdLike"];
   };
   "/2/users/{id}/likes/{tweet_id}": {
-    /** Causes the User (in the path) to unlike the specified Tweet. The User must match the User context authorizing the request */
+    /** Causes the User (in the path) to unlike the specified Post. The User must match the User context authorizing the request */
     delete: operations["usersIdUnlike"];
   };
   "/2/users/{id}/list_memberships": {
@@ -226,7 +284,7 @@ export interface paths {
     get: operations["getUserListMemberships"];
   };
   "/2/users/{id}/mentions": {
-    /** Returns Tweet objects that mention username associated to the provided User ID */
+    /** Returns Post objects that mention username associated to the provided User ID */
     get: operations["usersIdMentions"];
   };
   "/2/users/{id}/muting": {
@@ -250,24 +308,20 @@ export interface paths {
     delete: operations["listUserUnpin"];
   };
   "/2/users/{id}/retweets": {
-    /** Causes the User (in the path) to retweet the specified Tweet. The User in the path must match the User context authorizing the request. */
+    /** Causes the User (in the path) to repost the specified Post. The User in the path must match the User context authorizing the request. */
     post: operations["usersIdRetweets"];
   };
   "/2/users/{id}/retweets/{source_tweet_id}": {
-    /** Causes the User (in the path) to unretweet the specified Tweet. The User must match the User context authorizing the request */
+    /** Causes the User (in the path) to unretweet the specified Post. The User must match the User context authorizing the request */
     delete: operations["usersIdUnretweets"];
   };
   "/2/users/{id}/timelines/reverse_chronological": {
-    /** Returns Tweet objects that appears in the provided User ID's home timeline */
+    /** Returns Post objects that appears in the provided User ID's home timeline */
     get: operations["usersIdTimeline"];
   };
   "/2/users/{id}/tweets": {
-    /** Returns a list of Tweets authored by the provided User ID */
+    /** Returns a list of Posts authored by the provided User ID */
     get: operations["usersIdTweets"];
-  };
-  "/2/users/{source_user_id}/blocking/{target_user_id}": {
-    /** Causes the source User to unblock the target User. The source User must match the User context authorizing the request */
-    delete: operations["usersIdUnblock"];
   };
   "/2/users/{source_user_id}/following/{target_user_id}": {
     /** Causes the source User to unfollow the target User. The source User must match the User context authorizing the request */
@@ -300,19 +354,21 @@ export interface components {
      * @description The sum of results returned in this response.
      */
     Aggregate: number;
+    /** @description Client App Rule Counts for all applications in the project */
+    AllProjectClientApps: components["schemas"]["AppRulesCount"][];
     AnimatedGif: components["schemas"]["Media"] & {
       /** Format: uri */
       preview_image_url?: string;
       variants?: components["schemas"]["Variants"];
     };
-    BlockUserMutationResponse: {
-      data?: {
-        blocking?: boolean;
-      };
-      errors?: components["schemas"]["Problem"][];
-    };
-    BlockUserRequest: {
-      target_user_id: components["schemas"]["UserId"];
+    /** @description A count of user-provided stream filtering rules at the client application level. */
+    AppRulesCount: {
+      client_app_id?: components["schemas"]["ClientAppId"];
+      /**
+       * Format: int32
+       * @description Number of rules for client application
+       */
+      rule_count?: number;
     };
     BookmarkAddRequest: {
       tweet_id: components["schemas"]["TweetId"];
@@ -329,6 +385,23 @@ export interface components {
     CashtagFields: {
       /** @example TWTR */
       tag: string;
+    };
+    /** @description The ID of the client application */
+    ClientAppId: string;
+    /** @description Usage per client app */
+    ClientAppUsage: {
+      /**
+       * Format: ^[0-9]{1,19}$
+       * @description The unique identifier for this project
+       */
+      client_app_id?: string;
+      /** @description The usage value */
+      usage?: components["schemas"]["UsageFields"][];
+      /**
+       * Format: int32
+       * @description The number of results returned
+       */
+      usage_result_count?: number;
     };
     /** @description Your client has gone away. */
     ClientDisconnectedProblem: components["schemas"]["Problem"];
@@ -409,6 +482,11 @@ export interface components {
      * @example US
      */
     CountryCode: string;
+    CreateAttachmentsMessageRequest: {
+      attachments: components["schemas"]["DmAttachments"];
+      /** @description Text of the message. */
+      text?: string;
+    };
     /** @description A request to create a new batch compliance job. */
     CreateComplianceJobRequest: {
       name?: components["schemas"]["ComplianceJobName"];
@@ -423,6 +501,31 @@ export interface components {
     CreateComplianceJobResponse: {
       data?: components["schemas"]["ComplianceJob"];
       errors?: components["schemas"]["Problem"][];
+    };
+    CreateDmConversationRequest: {
+      /**
+       * @description The conversation type that is being created.
+       * @enum {string}
+       */
+      conversation_type: "Group";
+      message: components["schemas"]["CreateMessageRequest"];
+      participant_ids: components["schemas"]["DmParticipants"];
+    };
+    CreateDmEventResponse: {
+      data?: {
+        dm_conversation_id: components["schemas"]["DmConversationId"];
+        dm_event_id: components["schemas"]["DmEventId"];
+      };
+      errors?: components["schemas"]["Problem"][];
+    };
+    CreateMessageRequest: Partial<
+      components["schemas"]["CreateTextMessageRequest"]
+    > &
+      Partial<components["schemas"]["CreateAttachmentsMessageRequest"]>;
+    CreateTextMessageRequest: {
+      attachments?: components["schemas"]["DmAttachments"];
+      /** @description Text of the message. */
+      text: string;
     };
     /**
      * Format: date-time
@@ -448,6 +551,50 @@ export interface components {
       /** @enum {string} */
       section: "data" | "includes";
     };
+    /** @description Attachments to a DM Event. */
+    DmAttachments: components["schemas"]["DmMediaAttachment"][];
+    /**
+     * @description Unique identifier of a DM conversation. This can either be a numeric string, or a pair of numeric strings separated by a '-' character in the case of one-on-one DM Conversations.
+     * @example 123123123-456456456
+     */
+    DmConversationId: string;
+    DmEvent: {
+      /** @description Specifies the type of attachments (if any) present in this DM. */
+      attachments?: {
+        /** @description A list of card IDs (if cards are attached). */
+        card_ids?: string[];
+        /** @description A list of Media Keys for each one of the media attachments (if media are attached). */
+        media_keys?: components["schemas"]["MediaKey"][];
+      };
+      cashtags?: components["schemas"]["CashtagEntity"][];
+      /** Format: date-time */
+      created_at?: string;
+      dm_conversation_id?: components["schemas"]["DmConversationId"];
+      /** @example MessageCreate */
+      event_type: string;
+      hashtags?: components["schemas"]["HashtagEntity"][];
+      id: components["schemas"]["DmEventId"];
+      mentions?: components["schemas"]["MentionEntity"][];
+      /** @description A list of participants for a ParticipantsJoin or ParticipantsLeave event_type. */
+      participant_ids?: components["schemas"]["UserId"][];
+      /** @description A list of Posts this DM refers to. */
+      referenced_tweets?: {
+        id: components["schemas"]["TweetId"];
+      }[];
+      sender_id?: components["schemas"]["UserId"];
+      text?: string;
+      urls?: components["schemas"]["UrlEntityDm"][];
+    };
+    /**
+     * @description Unique identifier of a DM Event.
+     * @example 1146654567674912769
+     */
+    DmEventId: string;
+    DmMediaAttachment: {
+      media_id: components["schemas"]["MediaId"];
+    };
+    /** @description Participants for the DM Conversation. */
+    DmParticipants: components["schemas"]["UserId"][];
     /**
      * Format: date-time
      * @description Expiration time of the download URL.
@@ -578,6 +725,36 @@ export interface components {
         result_count?: components["schemas"]["ResultCount"];
       };
     };
+    Get2DmConversationsIdDmEventsResponse: {
+      data?: components["schemas"]["DmEvent"][];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
+      meta?: {
+        next_token?: components["schemas"]["NextToken"];
+        previous_token?: components["schemas"]["PreviousToken"];
+        result_count?: components["schemas"]["ResultCount"];
+      };
+    };
+    Get2DmConversationsWithParticipantIdDmEventsResponse: {
+      data?: components["schemas"]["DmEvent"][];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
+      meta?: {
+        next_token?: components["schemas"]["NextToken"];
+        previous_token?: components["schemas"]["PreviousToken"];
+        result_count?: components["schemas"]["ResultCount"];
+      };
+    };
+    Get2DmEventsResponse: {
+      data?: components["schemas"]["DmEvent"][];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
+      meta?: {
+        next_token?: components["schemas"]["NextToken"];
+        previous_token?: components["schemas"]["PreviousToken"];
+        result_count?: components["schemas"]["ResultCount"];
+      };
+    };
     Get2ListsIdFollowersResponse: {
       data?: components["schemas"]["User"][];
       errors?: components["schemas"]["Problem"][];
@@ -659,6 +836,10 @@ export interface components {
         result_count?: components["schemas"]["ResultCount"];
       };
     };
+    Get2TrendsByWoeidWoeidResponse: {
+      data?: components["schemas"]["Trend"][];
+      errors?: components["schemas"]["Problem"][];
+    };
     Get2TweetsCountsAllResponse: {
       data?: components["schemas"]["SearchCount"][];
       errors?: components["schemas"]["Problem"][];
@@ -678,6 +859,26 @@ export interface components {
         oldest_id?: components["schemas"]["OldestId"];
         total_tweet_count?: components["schemas"]["Aggregate"];
       };
+    };
+    Get2TweetsFirehoseStreamLangEnResponse: {
+      data?: components["schemas"]["Tweet"];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
+    };
+    Get2TweetsFirehoseStreamLangJaResponse: {
+      data?: components["schemas"]["Tweet"];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
+    };
+    Get2TweetsFirehoseStreamLangKoResponse: {
+      data?: components["schemas"]["Tweet"];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
+    };
+    Get2TweetsFirehoseStreamLangPtResponse: {
+      data?: components["schemas"]["Tweet"];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
     };
     Get2TweetsFirehoseStreamResponse: {
       data?: components["schemas"]["Tweet"];
@@ -710,6 +911,16 @@ export interface components {
     };
     Get2TweetsIdRetweetedByResponse: {
       data?: components["schemas"]["User"][];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
+      meta?: {
+        next_token?: components["schemas"]["NextToken"];
+        previous_token?: components["schemas"]["PreviousToken"];
+        result_count?: components["schemas"]["ResultCount"];
+      };
+    };
+    Get2TweetsIdRetweetsResponse: {
+      data?: components["schemas"]["Tweet"][];
       errors?: components["schemas"]["Problem"][];
       includes?: components["schemas"]["Expansions"];
       meta?: {
@@ -759,6 +970,14 @@ export interface components {
       data?: components["schemas"]["Tweet"];
       errors?: components["schemas"]["Problem"][];
       includes?: components["schemas"]["Expansions"];
+    };
+    Get2TweetsSearchStreamRulesCountsResponse: {
+      data?: components["schemas"]["RulesCount"];
+      errors?: components["schemas"]["Problem"][];
+    };
+    Get2UsageTweetsResponse: {
+      data?: components["schemas"]["Usage"];
+      errors?: components["schemas"]["Problem"][];
     };
     Get2UsersByResponse: {
       data?: components["schemas"]["User"][];
@@ -919,6 +1138,15 @@ export interface components {
       errors?: components["schemas"]["Problem"][];
       includes?: components["schemas"]["Expansions"];
     };
+    Get2UsersSearchResponse: {
+      data?: components["schemas"]["User"][];
+      errors?: components["schemas"]["Problem"][];
+      includes?: components["schemas"]["Expansions"];
+      meta?: {
+        next_token?: components["schemas"]["NextToken"];
+        previous_token?: components["schemas"]["PreviousToken"];
+      };
+    };
     HashtagEntity: components["schemas"]["EntityIndicesInclusiveExclusive"] &
       components["schemas"]["HashtagFields"];
     /** @description Represent the portion of text recognized as a Hashtag, and its start and end position within the text. */
@@ -945,7 +1173,7 @@ export interface components {
      * @example 1372966999991541762
      */
     JobId: string;
-    /** @description A Twitter List is a curated group of accounts. */
+    /** @description A X List is a curated group of accounts. */
     List: {
       /** Format: date-time */
       created_at?: string;
@@ -968,7 +1196,7 @@ export interface components {
       private?: boolean;
     };
     ListCreateResponse: {
-      /** @description A Twitter List is a curated group of accounts. */
+      /** @description A X List is a curated group of accounts. */
       data?: {
         id: components["schemas"]["ListId"];
         /** @description The name of this List. */
@@ -1067,6 +1295,13 @@ export interface components {
     NextToken: string;
     /** @description A problem that indicates the user's rule set is not compliant. */
     NonCompliantRulesProblem: components["schemas"]["Problem"];
+    /**
+     * @description The note content of the Tweet.
+     * @example Learn how to use the user Tweet timeline and user mention timeline endpoints in the X API v2 to explore Tweet\u2026 https:\/\/t.co\/56a0vZUx7i
+     */
+    NoteTweetText: string;
+    /** @description A problem that indicates your client application does not have the required OAuth1 permissions for the requested endpoint. */
+    Oauth1PermissionsProblem: components["schemas"]["Problem"];
     /** @description The oldest id in this response. */
     OldestId: string;
     /** @description You have been disconnected for operational reasons. */
@@ -1188,6 +1423,17 @@ export interface components {
      * @enum {string}
      */
     ReplySettings: "everyone" | "mentionedUsers" | "following" | "other";
+    /**
+     * @description Shows who can reply a Tweet. Fields returned are everyone, mentioned_users, subscribers, verified and following.
+     * @enum {string}
+     */
+    ReplySettingsWithVerifiedUsers:
+      | "everyone"
+      | "mentionedUsers"
+      | "following"
+      | "other"
+      | "subscribers"
+      | "verified";
     /** @description A problem that indicates that a given Tweet, User, etc. does not exist. */
     ResourceNotFoundProblem: components["schemas"]["Problem"] & {
       parameter: string;
@@ -1237,7 +1483,7 @@ export interface components {
     };
     /**
      * @description A tag meant for the labeling of user provided rules.
-     * @example Non-retweeted coffee Tweets
+     * @example Non-retweeted coffee Posts
      */
     RuleTag: string;
     /**
@@ -1247,6 +1493,26 @@ export interface components {
     RuleValue: string;
     /** @description You have exceeded the maximum number of rules. */
     RulesCapProblem: components["schemas"]["Problem"];
+    /** @description A count of user-provided stream filtering rules at the application and project levels. */
+    RulesCount: {
+      all_project_client_apps?: components["schemas"]["AllProjectClientApps"];
+      /**
+       * Format: int32
+       * @description Cap of number of rules allowed per client application
+       */
+      cap_per_client_app?: number;
+      /**
+       * Format: int32
+       * @description Cap of number of rules allowed per project
+       */
+      cap_per_project?: number;
+      client_app_rules_count?: components["schemas"]["AppRulesCount"];
+      /**
+       * Format: int32
+       * @description Number of rules for project
+       */
+      project_rules_count?: number;
+    };
     RulesLookupResponse: {
       data?: components["schemas"]["Rule"][];
       meta: components["schemas"]["RulesResponseMetadata"];
@@ -1419,12 +1685,22 @@ export interface components {
     };
     /** @description Unique identifier of this Topic. */
     TopicId: string;
+    /** @description A trend. */
+    Trend: {
+      /** @description Name of the trend. */
+      trend_name?: string;
+      /**
+       * Format: int32
+       * @description Number of Posts in this trend.
+       */
+      tweet_count?: number;
+    };
     /**
      * @example {
      *   "author_id": "2244994945",
      *   "created_at": "Wed Jan 06 18:40:40 +0000 2021",
      *   "id": "1346889436626259968",
-     *   "text": "Learn how to use the user Tweet timeline and user mention timeline endpoints in the Twitter API v2 to explore Tweet\\u2026 https:\\/\\/t.co\\/56a0vZUx7i"
+     *   "text": "Learn how to use the user Tweet timeline and user mention timeline endpoints in the X API v2 to explore Tweet\\u2026 https:\\/\\/t.co\\/56a0vZUx7i"
      * }
      */
     Tweet: {
@@ -1432,6 +1708,8 @@ export interface components {
       attachments?: {
         /** @description A list of Media Keys for each one of the media attachments (if media are attached). */
         media_keys?: components["schemas"]["MediaKey"][];
+        /** @description A list of Posts the media on this Tweet was originally posted in. For example, if the media on a tweet is re-used in another Tweet, this refers to the original, source Tweet.. */
+        media_source_tweet_id?: components["schemas"]["TweetId"][];
         /** @description A list of poll IDs (if polls are attached). */
         poll_ids?: components["schemas"]["PollId"][];
       };
@@ -1470,7 +1748,7 @@ export interface components {
       id: components["schemas"]["TweetId"];
       in_reply_to_user_id?: components["schemas"]["UserId"];
       /**
-       * @description Language of the Tweet, if detected by Twitter. Returned as a BCP47 language tag.
+       * @description Language of the Tweet, if detected by X. Returned as a BCP47 language tag.
        * @example en
        */
       lang?: string;
@@ -1481,6 +1759,16 @@ export interface components {
          * @description Number of times this Tweet has been viewed.
          */
         impression_count?: number;
+      };
+      /** @description The full-content of the Tweet, including text beyond 280 characters. */
+      note_tweet?: {
+        entities?: {
+          cashtags?: components["schemas"]["CashtagEntity"][];
+          hashtags?: components["schemas"]["HashtagEntity"][];
+          mentions?: components["schemas"]["MentionEntity"][];
+          urls?: components["schemas"]["UrlEntity"][];
+        };
+        text?: components["schemas"]["NoteTweetText"];
       };
       /** @description Organic nonpublic engagement metrics for the Tweet at the time of the request. */
       organic_metrics?: {
@@ -1523,6 +1811,16 @@ export interface components {
       };
       /** @description Engagement metrics for the Tweet at the time of the request. */
       public_metrics?: {
+        /**
+         * Format: int32
+         * @description Number of times this Tweet has been bookmarked.
+         */
+        bookmark_count: number;
+        /**
+         * Format: int32
+         * @description Number of times this Tweet has been viewed.
+         */
+        impression_count: number;
         /** @description Number of times this Tweet has been liked. */
         like_count: number;
         /** @description Number of times this Tweet has been quoted. */
@@ -1532,14 +1830,14 @@ export interface components {
         /** @description Number of times this Tweet has been Retweeted. */
         retweet_count: number;
       };
-      /** @description A list of Tweets this Tweet refers to. For example, if the parent Tweet is a Retweet, a Quoted Tweet or a Reply, it will include the related Tweet referenced to by its parent. */
+      /** @description A list of Posts this Tweet refers to. For example, if the parent Tweet is a Retweet, a Quoted Tweet or a Reply, it will include the related Tweet referenced to by its parent. */
       referenced_tweets?: {
         id: components["schemas"]["TweetId"];
         /** @enum {string} */
         type: "retweeted" | "quoted" | "replied_to";
       }[];
-      reply_settings?: components["schemas"]["ReplySettings"];
-      /** @description The name of the app the user Tweeted from. */
+      reply_settings?: components["schemas"]["ReplySettingsWithVerifiedUsers"];
+      /** @description This is deprecated. */
       source?: string;
       text: components["schemas"]["TweetText"];
       withheld?: components["schemas"]["TweetWithheld"];
@@ -1596,7 +1894,7 @@ export interface components {
         tagged_user_ids?: components["schemas"]["UserId"][];
       };
       /**
-       * @description Nullcasted (promoted-only) Tweets do not appear in the public timeline and are not served to followers.
+       * @description Nullcasted (promoted-only) Posts do not appear in the public timeline and are not served to followers.
        * @default false
        */
       nullcast?: boolean;
@@ -1625,7 +1923,7 @@ export interface components {
        * @description Settings to indicate who can reply to the Tweet.
        * @enum {string}
        */
-      reply_settings?: "following" | "mentionedUsers";
+      reply_settings?: "following" | "mentionedUsers" | "subscribers";
       text?: components["schemas"]["TweetText"];
     };
     TweetCreateResponse: {
@@ -1735,7 +2033,7 @@ export interface components {
     };
     /**
      * @description The content of the Tweet.
-     * @example Learn how to use the user Tweet timeline and user mention timeline endpoints in the Twitter API v2 to explore Tweet\u2026 https:\/\/t.co\/56a0vZUx7i
+     * @example Learn how to use the user Tweet timeline and user mention timeline endpoints in the X API v2 to explore Tweet\u2026 https:\/\/t.co\/56a0vZUx7i
      */
     TweetText: string;
     TweetUndropComplianceSchema: {
@@ -1798,6 +2096,9 @@ export interface components {
     /** @description Represent the portion of text recognized as a URL, and its start and end position within the text. */
     UrlEntity: components["schemas"]["EntityIndicesInclusiveExclusive"] &
       components["schemas"]["UrlFields"];
+    /** @description Represent the portion of text recognized as a URL, and its start and end position within the text. */
+    UrlEntityDm: components["schemas"]["EntityIndicesInclusiveExclusive"] &
+      components["schemas"]["UrlFields"];
     /** @description Represent the portion of text recognized as a URL. */
     UrlFields: {
       /**
@@ -1806,7 +2107,7 @@ export interface components {
        */
       description?: string;
       /**
-       * @description The URL as displayed in the Twitter client.
+       * @description The URL as displayed in the X client.
        * @example twittercommunity.com/t/introducing-…
        */
       display_url?: string;
@@ -1833,6 +2134,41 @@ export interface components {
       url?: components["schemas"]["Url"];
       width?: components["schemas"]["MediaWidth"];
     };
+    /** @description Usage per client app */
+    Usage: {
+      /**
+       * Format: int32
+       * @description Number of days left for the Tweet cap to reset
+       */
+      cap_reset_day?: number;
+      /** @description The daily usage breakdown for each Client Application a project */
+      daily_client_app_usage?: components["schemas"]["ClientAppUsage"][];
+      /** @description The daily usage breakdown for a project */
+      daily_project_usage?: {
+        /**
+         * Format: int32
+         * @description The unique identifier for this project
+         */
+        project_id?: number;
+        /** @description The usage value */
+        usage?: components["schemas"]["UsageFields"][];
+      };
+      /**
+       * Format: int32
+       * @description Total number of Posts that can be read in this project per month
+       */
+      project_cap?: number;
+      /**
+       * Format: ^[0-9]{1,19}$
+       * @description The unique identifier for this project
+       */
+      project_id?: string;
+      /**
+       * Format: int32
+       * @description The number of Posts read in this project
+       */
+      project_usage?: number;
+    };
     /** @description A problem that indicates that a usage cap has been exceeded. */
     UsageCapExceededProblem: components["schemas"]["Problem"] & {
       /** @enum {string} */
@@ -1840,12 +2176,26 @@ export interface components {
       /** @enum {string} */
       scope?: "Account" | "Product";
     };
+    /** @description Represents the data for Usage */
+    UsageFields: {
+      /**
+       * Format: date-time
+       * @description The time period for the usage
+       * @example 2021-01-06T18:40:40.000Z
+       */
+      date?: string;
+      /**
+       * Format: int32
+       * @description The usage value
+       */
+      usage?: number;
+    };
     /**
-     * @description The Twitter User object.
+     * @description The X User object.
      * @example {
      *   "created_at": "2013-12-14T04:35:55Z",
      *   "id": "2244994945",
-     *   "name": "Twitter Dev",
+     *   "name": "X Dev",
      *   "protected": false,
      *   "username": "TwitterDev"
      * }
@@ -1869,6 +2219,7 @@ export interface components {
       id: components["schemas"]["UserId"];
       /** @description The location specified in the User's profile, if the User provided one. As this is a freeform value, it may not indicate a valid location, but it may be fuzzily evaluated when performing searches with location queries. */
       location?: string;
+      most_recent_tweet_id?: components["schemas"]["TweetId"];
       /** @description The friendly name of this User, as shown on their profile. */
       name: string;
       pinned_tweet_id?: components["schemas"]["TweetId"];
@@ -1877,7 +2228,7 @@ export interface components {
        * @description The URL to the profile image for this User.
        */
       profile_image_url?: string;
-      /** @description Indicates if this User has chosen to protect their Tweets (in other words, if this User's Tweets are private). */
+      /** @description Indicates if this User has chosen to protect their Posts (in other words, if this User's Posts are private). */
       protected?: boolean;
       /** @description A list of metrics for this User. */
       public_metrics?: {
@@ -1885,16 +2236,30 @@ export interface components {
         followers_count: number;
         /** @description Number of Users this User is following. */
         following_count: number;
+        /** @description The number of likes created by this User. */
+        like_count?: number;
         /** @description The number of lists that include this User. */
         listed_count: number;
-        /** @description The number of Tweets (including Retweets) posted by this User. */
+        /** @description The number of Posts (including Retweets) posted by this User. */
         tweet_count: number;
       };
+      /** @description Indicates if you can send a DM to this User */
+      receives_your_dm?: boolean;
+      /**
+       * @description The X Blue subscription type of the user, eg: Basic, Premium, PremiumPlus or None.
+       * @enum {string}
+       */
+      subscription_type?: "Basic" | "Premium" | "PremiumPlus" | "None";
       /** @description The URL specified in the User's profile. */
       url?: string;
       username: components["schemas"]["UserName"];
-      /** @description Indicate if this User is a verified Twitter User. */
+      /** @description Indicate if this User is a verified X User. */
       verified?: boolean;
+      /**
+       * @description The X Blue verified type of the user, eg: blue, government, business or none.
+       * @enum {string}
+       */
+      verified_type?: "blue" | "government" | "business" | "none";
       withheld?: components["schemas"]["UserWithheld"];
     };
     /** @description User compliance data. */
@@ -1940,7 +2305,7 @@ export interface components {
      * @example 2244994945
      */
     UserIdMatchesAuthenticatedUser: string;
-    /** @description The Twitter handle (screen name) of this user. */
+    /** @description The X handle (screen name) of this user. */
     UserName: string;
     UserProfileModificationComplianceSchema: {
       user_profile_modification: components["schemas"]["UserProfileModificationObjectSchema"];
@@ -1976,6 +2341,8 @@ export interface components {
     UserScrubGeoSchema: {
       scrub_geo: components["schemas"]["UserScrubGeoObjectSchema"];
     };
+    /** @description The the search string by which to query for users. */
+    UserSearchQuery: string;
     UserSuspendComplianceSchema: {
       user_suspend: components["schemas"]["UserComplianceSchema"];
     };
@@ -2049,6 +2416,7 @@ export interface components {
     };
     UsersRetweetsCreateResponse: {
       data?: {
+        id?: components["schemas"]["TweetId"];
         retweeted?: boolean;
       };
       errors?: components["schemas"]["Problem"][];
@@ -2195,6 +2563,28 @@ export interface components {
       | "upload_expires_at"
       | "upload_url"
     )[];
+    /** @description A comma separated list of DmConversation fields to display. */
+    DmConversationFieldsParameter: "id"[];
+    /** @description A comma separated list of fields to expand. */
+    DmEventExpansionsParameter: (
+      | "attachments.media_keys"
+      | "participant_ids"
+      | "referenced_tweets.id"
+      | "sender_id"
+    )[];
+    /** @description A comma separated list of DmEvent fields to display. */
+    DmEventFieldsParameter: (
+      | "attachments"
+      | "created_at"
+      | "dm_conversation_id"
+      | "entities"
+      | "event_type"
+      | "id"
+      | "participant_ids"
+      | "referenced_tweets"
+      | "sender_id"
+      | "text"
+    )[];
     /** @description A comma separated list of fields to expand. */
     ListExpansionsParameter: "owner_id"[];
     /** @description A comma separated list of List fields to display. */
@@ -2243,6 +2633,14 @@ export interface components {
       | "options"
       | "voting_status"
     )[];
+    /** @description A comma separated list of RulesCount fields to display. */
+    RulesCountFieldsParameter: (
+      | "all_project_client_apps"
+      | "cap_per_client_app"
+      | "cap_per_project"
+      | "client_app_rules_count"
+      | "project_rules_count"
+    )[];
     /** @description A comma separated list of SearchCount fields to display. */
     SearchCountFieldsParameter: ("end" | "start" | "tweet_count")[];
     /** @description A comma separated list of fields to expand. */
@@ -2275,15 +2673,19 @@ export interface components {
     )[];
     /** @description A comma separated list of Topic fields to display. */
     TopicFieldsParameter: ("description" | "id" | "name")[];
+    /** @description A comma separated list of Trend fields to display. */
+    TrendFieldsParameter: ("trend_name" | "tweet_count")[];
     /** @description A comma separated list of fields to expand. */
     TweetExpansionsParameter: (
       | "attachments.media_keys"
+      | "attachments.media_source_tweet"
       | "attachments.poll_ids"
       | "author_id"
       | "edit_history_tweet_ids"
       | "entities.mentions.username"
       | "geo.place_id"
       | "in_reply_to_user_id"
+      | "entities.note.mentions.username"
       | "referenced_tweets.id"
       | "referenced_tweets.id.author_id"
     )[];
@@ -2291,6 +2693,7 @@ export interface components {
     TweetFieldsParameter: (
       | "attachments"
       | "author_id"
+      | "card_uri"
       | "context_annotations"
       | "conversation_id"
       | "created_at"
@@ -2302,6 +2705,7 @@ export interface components {
       | "in_reply_to_user_id"
       | "lang"
       | "non_public_metrics"
+      | "note_tweet"
       | "organic_metrics"
       | "possibly_sensitive"
       | "promoted_metrics"
@@ -2312,8 +2716,17 @@ export interface components {
       | "text"
       | "withheld"
     )[];
+    /** @description A comma separated list of Usage fields to display. */
+    UsageFieldsParameter: (
+      | "cap_reset_day"
+      | "daily_client_app_usage"
+      | "daily_project_usage"
+      | "project_cap"
+      | "project_id"
+      | "project_usage"
+    )[];
     /** @description A comma separated list of fields to expand. */
-    UserExpansionsParameter: "pinned_tweet_id"[];
+    UserExpansionsParameter: ("most_recent_tweet_id" | "pinned_tweet_id")[];
     /** @description A comma separated list of User fields to display. */
     UserFieldsParameter: (
       | "created_at"
@@ -2321,14 +2734,18 @@ export interface components {
       | "entities"
       | "id"
       | "location"
+      | "most_recent_tweet_id"
       | "name"
       | "pinned_tweet_id"
       | "profile_image_url"
       | "protected"
       | "public_metrics"
+      | "receives_your_dm"
+      | "subscription_type"
       | "url"
       | "username"
       | "verified"
+      | "verified_type"
       | "withheld"
     )[];
   };
@@ -2404,6 +2821,222 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["Get2ComplianceJobsIdResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Creates a new DM Conversation. */
+  dmConversationIdCreate: {
+    parameters: {};
+    responses: {
+      /** The request has succeeded. */
+      201: {
+        content: {
+          "application/json": components["schemas"]["CreateDmEventResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateDmConversationRequest"];
+      };
+    };
+  };
+  /** Returns DM Events for a DM Conversation */
+  getDmConversationsWithParticipantIdDmEvents: {
+    parameters: {
+      path: {
+        /** The ID of the participant user for the One to One DM conversation. */
+        participant_id: components["schemas"]["UserId"];
+      };
+      query: {
+        /** The maximum number of results. */
+        max_results?: number;
+        /** This parameter is used to get a specified 'page' of results. */
+        pagination_token?: components["schemas"]["PaginationToken32"];
+        /** The set of event_types to include in the results. */
+        event_types?: (
+          | "MessageCreate"
+          | "ParticipantsJoin"
+          | "ParticipantsLeave"
+        )[];
+        /** A comma separated list of DmEvent fields to display. */
+        "dm_event.fields"?: components["parameters"]["DmEventFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["DmEventExpansionsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Get2DmConversationsWithParticipantIdDmEventsResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Creates a new message for a DM Conversation with a participant user by ID */
+  dmConversationWithUserEventIdCreate: {
+    parameters: {
+      path: {
+        /** The ID of the recipient user that will receive the DM. */
+        participant_id: components["schemas"]["UserId"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      201: {
+        content: {
+          "application/json": components["schemas"]["CreateDmEventResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateMessageRequest"];
+      };
+    };
+  };
+  /** Creates a new message for a DM Conversation specified by DM Conversation ID */
+  dmConversationByIdEventIdCreate: {
+    parameters: {
+      path: {
+        /** The DM Conversation ID. */
+        dm_conversation_id: string;
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      201: {
+        content: {
+          "application/json": components["schemas"]["CreateDmEventResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateMessageRequest"];
+      };
+    };
+  };
+  /** Returns DM Events for a DM Conversation */
+  getDmConversationsIdDmEvents: {
+    parameters: {
+      path: {
+        /** The DM Conversation ID. */
+        id: components["schemas"]["DmConversationId"];
+      };
+      query: {
+        /** The maximum number of results. */
+        max_results?: number;
+        /** This parameter is used to get a specified 'page' of results. */
+        pagination_token?: components["schemas"]["PaginationToken32"];
+        /** The set of event_types to include in the results. */
+        event_types?: (
+          | "MessageCreate"
+          | "ParticipantsJoin"
+          | "ParticipantsLeave"
+        )[];
+        /** A comma separated list of DmEvent fields to display. */
+        "dm_event.fields"?: components["parameters"]["DmEventFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["DmEventExpansionsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Get2DmConversationsIdDmEventsResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Returns recent DM Events across DM conversations */
+  getDmEvents: {
+    parameters: {
+      query: {
+        /** The maximum number of results. */
+        max_results?: number;
+        /** This parameter is used to get a specified 'page' of results. */
+        pagination_token?: components["schemas"]["PaginationToken32"];
+        /** The set of event_types to include in the results. */
+        event_types?: (
+          | "MessageCreate"
+          | "ParticipantsJoin"
+          | "ParticipantsLeave"
+        )[];
+        /** A comma separated list of DmEvent fields to display. */
+        "dm_event.fields"?: components["parameters"]["DmEventFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["DmEventExpansionsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Get2DmEventsResponse"];
         };
       };
       /** The request has failed. */
@@ -2651,7 +3284,7 @@ export interface operations {
       };
     };
   };
-  /** Returns a list of Tweets associated with the provided List ID. */
+  /** Returns a list of Posts associated with the provided List ID. */
   listsIdTweets: {
     parameters: {
       path: {
@@ -2875,7 +3508,7 @@ export interface operations {
       };
     };
   };
-  /** Retrieves Tweets shared in the specified Space. */
+  /** Retrieves Posts shared in the specified Space. */
   spaceTweets: {
     parameters: {
       path: {
@@ -2883,7 +3516,7 @@ export interface operations {
         id: string;
       };
       query: {
-        /** The number of Tweets to fetch from the provided space. If not provided, the value will default to the maximum of 100. */
+        /** The number of Posts to fetch from the provided space. If not provided, the value will default to the maximum of 100. */
         max_results?: number;
         /** A comma separated list of Tweet fields to display. */
         "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
@@ -2915,11 +3548,39 @@ export interface operations {
       };
     };
   };
-  /** Returns a variety of information about the Tweet specified by the requested ID. */
+  /** Returns the Trend associated with the supplied WoeId. */
+  getTrends: {
+    parameters: {
+      path: {
+        /** The WOEID of the place to lookup a trend for. */
+        woeid: number;
+      };
+      query: {
+        /** A comma separated list of Trend fields to display. */
+        "trend.fields"?: components["parameters"]["TrendFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Get2TrendsByWoeidWoeidResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Returns a variety of information about the Post specified by the requested ID. */
   findTweetsById: {
     parameters: {
       query: {
-        /** A comma separated list of Tweet IDs. Up to 100 are allowed in a single request. */
+        /** A comma separated list of Post IDs. Up to 100 are allowed in a single request. */
         ids: components["schemas"]["TweetId"][];
         /** A comma separated list of Tweet fields to display. */
         "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
@@ -2951,7 +3612,7 @@ export interface operations {
       };
     };
   };
-  /** Causes the User to create a Tweet under the authorized account. */
+  /** Causes the User to create a Post under the authorized account. */
   createTweet: {
     parameters: {};
     responses: {
@@ -2975,7 +3636,7 @@ export interface operations {
       };
     };
   };
-  /** Streams 100% of compliance data for Tweets */
+  /** Streams 100% of compliance data for Posts */
   getTweetsComplianceStream: {
     parameters: {
       query: {
@@ -2983,9 +3644,9 @@ export interface operations {
         backfill_minutes?: number;
         /** The partition number. */
         partition: number;
-        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Tweet Compliance events will be provided. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Post Compliance events will be provided. */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Tweet Compliance events will be provided. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Post Compliance events will be provided. */
         end_time?: string;
       };
     };
@@ -3005,19 +3666,19 @@ export interface operations {
       };
     };
   };
-  /** Returns Tweet Counts that match a search query. */
+  /** Returns Post Counts that match a search query. */
   tweetCountsFullArchiveSearch: {
     parameters: {
       query: {
-        /** One query/rule/filter for matching Tweets. Refer to https://t.co/rulelength to identify the max query length. */
+        /** One query/rule/filter for matching Posts. Refer to https://t.co/rulelength to identify the max query length. */
         query: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The oldest UTC timestamp (from most recent 7 days) from which the Tweets will be provided. Timestamp is in second granularity and is inclusive (i.e. 12:00:01 includes the first second of the minute). */
+        /** YYYY-MM-DDTHH:mm:ssZ. The oldest UTC timestamp (from most recent 7 days) from which the Posts will be provided. Timestamp is in second granularity and is inclusive (i.e. 12:00:01 includes the first second of the minute). */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The newest, most recent UTC timestamp to which the Tweets will be provided. Timestamp is in second granularity and is exclusive (i.e. 12:00:01 excludes the first second of the minute). */
+        /** YYYY-MM-DDTHH:mm:ssZ. The newest, most recent UTC timestamp to which the Posts will be provided. Timestamp is in second granularity and is exclusive (i.e. 12:00:01 excludes the first second of the minute). */
         end_time?: string;
-        /** Returns results with a Tweet ID greater than (that is, more recent than) the specified ID. */
+        /** Returns results with a Post ID greater than (that is, more recent than) the specified ID. */
         since_id?: components["schemas"]["TweetId"];
-        /** Returns results with a Tweet ID less than (that is, older than) the specified ID. */
+        /** Returns results with a Post ID less than (that is, older than) the specified ID. */
         until_id?: components["schemas"]["TweetId"];
         /** This parameter is used to get the next 'page' of results. The value used with the parameter is pulled directly from the response provided by the API, and should not be modified. */
         next_token?: components["schemas"]["PaginationToken36"];
@@ -3045,19 +3706,19 @@ export interface operations {
       };
     };
   };
-  /** Returns Tweet Counts from the last 7 days that match a search query. */
+  /** Returns Post Counts from the last 7 days that match a search query. */
   tweetCountsRecentSearch: {
     parameters: {
       query: {
-        /** One query/rule/filter for matching Tweets. Refer to https://t.co/rulelength to identify the max query length. */
+        /** One query/rule/filter for matching Posts. Refer to https://t.co/rulelength to identify the max query length. */
         query: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The oldest UTC timestamp (from most recent 7 days) from which the Tweets will be provided. Timestamp is in second granularity and is inclusive (i.e. 12:00:01 includes the first second of the minute). */
+        /** YYYY-MM-DDTHH:mm:ssZ. The oldest UTC timestamp (from most recent 7 days) from which the Posts will be provided. Timestamp is in second granularity and is inclusive (i.e. 12:00:01 includes the first second of the minute). */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The newest, most recent UTC timestamp to which the Tweets will be provided. Timestamp is in second granularity and is exclusive (i.e. 12:00:01 excludes the first second of the minute). */
+        /** YYYY-MM-DDTHH:mm:ssZ. The newest, most recent UTC timestamp to which the Posts will be provided. Timestamp is in second granularity and is exclusive (i.e. 12:00:01 excludes the first second of the minute). */
         end_time?: string;
-        /** Returns results with a Tweet ID greater than (that is, more recent than) the specified ID. */
+        /** Returns results with a Post ID greater than (that is, more recent than) the specified ID. */
         since_id?: components["schemas"]["TweetId"];
-        /** Returns results with a Tweet ID less than (that is, older than) the specified ID. */
+        /** Returns results with a Post ID less than (that is, older than) the specified ID. */
         until_id?: components["schemas"]["TweetId"];
         /** This parameter is used to get the next 'page' of results. The value used with the parameter is pulled directly from the response provided by the API, and should not be modified. */
         next_token?: components["schemas"]["PaginationToken36"];
@@ -3085,7 +3746,7 @@ export interface operations {
       };
     };
   };
-  /** Streams 100% of public Tweets. */
+  /** Streams 100% of public Posts. */
   getTweetsFirehoseStream: {
     parameters: {
       query: {
@@ -3093,9 +3754,9 @@ export interface operations {
         backfill_minutes?: number;
         /** The partition number. */
         partition: number;
-        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp to which the Tweets will be provided. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp to which the Posts will be provided. */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Tweets will be provided. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. */
         end_time?: string;
         /** A comma separated list of Tweet fields to display. */
         "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
@@ -3127,15 +3788,183 @@ export interface operations {
       };
     };
   };
-  /** Streams 100% of labeling events applied to Tweets */
+  /** Streams 100% of English Language public Posts. */
+  getTweetsFirehoseStreamLangEn: {
+    parameters: {
+      query: {
+        /** The number of minutes of backfill requested. */
+        backfill_minutes?: number;
+        /** The partition number. */
+        partition: number;
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp to which the Posts will be provided. */
+        start_time?: string;
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. */
+        end_time?: string;
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["TweetExpansionsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of Poll fields to display. */
+        "poll.fields"?: components["parameters"]["PollFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Place fields to display. */
+        "place.fields"?: components["parameters"]["PlaceFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["StreamingTweetResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Streams 100% of Japanese Language public Posts. */
+  getTweetsFirehoseStreamLangJa: {
+    parameters: {
+      query: {
+        /** The number of minutes of backfill requested. */
+        backfill_minutes?: number;
+        /** The partition number. */
+        partition: number;
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp to which the Posts will be provided. */
+        start_time?: string;
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. */
+        end_time?: string;
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["TweetExpansionsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of Poll fields to display. */
+        "poll.fields"?: components["parameters"]["PollFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Place fields to display. */
+        "place.fields"?: components["parameters"]["PlaceFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["StreamingTweetResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Streams 100% of Korean Language public Posts. */
+  getTweetsFirehoseStreamLangKo: {
+    parameters: {
+      query: {
+        /** The number of minutes of backfill requested. */
+        backfill_minutes?: number;
+        /** The partition number. */
+        partition: number;
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp to which the Posts will be provided. */
+        start_time?: string;
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. */
+        end_time?: string;
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["TweetExpansionsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of Poll fields to display. */
+        "poll.fields"?: components["parameters"]["PollFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Place fields to display. */
+        "place.fields"?: components["parameters"]["PlaceFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["StreamingTweetResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Streams 100% of Portuguese Language public Posts. */
+  getTweetsFirehoseStreamLangPt: {
+    parameters: {
+      query: {
+        /** The number of minutes of backfill requested. */
+        backfill_minutes?: number;
+        /** The partition number. */
+        partition: number;
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp to which the Posts will be provided. */
+        start_time?: string;
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. */
+        end_time?: string;
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["TweetExpansionsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of Poll fields to display. */
+        "poll.fields"?: components["parameters"]["PollFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Place fields to display. */
+        "place.fields"?: components["parameters"]["PlaceFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["StreamingTweetResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Streams 100% of labeling events applied to Posts */
   getTweetsLabelStream: {
     parameters: {
       query: {
         /** The number of minutes of backfill requested. */
         backfill_minutes?: number;
-        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Tweet labels will be provided. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Post labels will be provided. */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp from which the Tweet labels will be provided. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp from which the Post labels will be provided. */
         end_time?: string;
       };
     };
@@ -3155,7 +3984,7 @@ export interface operations {
       };
     };
   };
-  /** Streams a deterministic 1% of public Tweets. */
+  /** Streams a deterministic 1% of public Posts. */
   sampleStream: {
     parameters: {
       query: {
@@ -3191,7 +4020,7 @@ export interface operations {
       };
     };
   };
-  /** Streams a deterministic 10% of public Tweets. */
+  /** Streams a deterministic 10% of public Posts. */
   getTweetsSample10Stream: {
     parameters: {
       query: {
@@ -3199,9 +4028,9 @@ export interface operations {
         backfill_minutes?: number;
         /** The partition number. */
         partition: number;
-        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp to which the Tweets will be provided. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp to which the Posts will be provided. */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Tweets will be provided. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. */
         end_time?: string;
         /** A comma separated list of Tweet fields to display. */
         "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
@@ -3233,19 +4062,19 @@ export interface operations {
       };
     };
   };
-  /** Returns Tweets that match a search query. */
+  /** Returns Posts that match a search query. */
   tweetsFullarchiveSearch: {
     parameters: {
       query: {
-        /** One query/rule/filter for matching Tweets. Refer to https://t.co/rulelength to identify the max query length. */
+        /** One query/rule/filter for matching Posts. Refer to https://t.co/rulelength to identify the max query length. */
         query: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The oldest UTC timestamp from which the Tweets will be provided. Timestamp is in second granularity and is inclusive (i.e. 12:00:01 includes the first second of the minute). */
+        /** YYYY-MM-DDTHH:mm:ssZ. The oldest UTC timestamp from which the Posts will be provided. Timestamp is in second granularity and is inclusive (i.e. 12:00:01 includes the first second of the minute). */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The newest, most recent UTC timestamp to which the Tweets will be provided. Timestamp is in second granularity and is exclusive (i.e. 12:00:01 excludes the first second of the minute). */
+        /** YYYY-MM-DDTHH:mm:ssZ. The newest, most recent UTC timestamp to which the Posts will be provided. Timestamp is in second granularity and is exclusive (i.e. 12:00:01 excludes the first second of the minute). */
         end_time?: string;
-        /** Returns results with a Tweet ID greater than (that is, more recent than) the specified ID. */
+        /** Returns results with a Post ID greater than (that is, more recent than) the specified ID. */
         since_id?: components["schemas"]["TweetId"];
-        /** Returns results with a Tweet ID less than (that is, older than) the specified ID. */
+        /** Returns results with a Post ID less than (that is, older than) the specified ID. */
         until_id?: components["schemas"]["TweetId"];
         /** The maximum number of search results to be returned by a request. */
         max_results?: number;
@@ -3285,19 +4114,19 @@ export interface operations {
       };
     };
   };
-  /** Returns Tweets from the last 7 days that match a search query. */
+  /** Returns Posts from the last 7 days that match a search query. */
   tweetsRecentSearch: {
     parameters: {
       query: {
-        /** One query/rule/filter for matching Tweets. Refer to https://t.co/rulelength to identify the max query length. */
+        /** One query/rule/filter for matching Posts. Refer to https://t.co/rulelength to identify the max query length. */
         query: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The oldest UTC timestamp from which the Tweets will be provided. Timestamp is in second granularity and is inclusive (i.e. 12:00:01 includes the first second of the minute). */
+        /** YYYY-MM-DDTHH:mm:ssZ. The oldest UTC timestamp from which the Posts will be provided. Timestamp is in second granularity and is inclusive (i.e. 12:00:01 includes the first second of the minute). */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The newest, most recent UTC timestamp to which the Tweets will be provided. Timestamp is in second granularity and is exclusive (i.e. 12:00:01 excludes the first second of the minute). */
+        /** YYYY-MM-DDTHH:mm:ssZ. The newest, most recent UTC timestamp to which the Posts will be provided. Timestamp is in second granularity and is exclusive (i.e. 12:00:01 excludes the first second of the minute). */
         end_time?: string;
-        /** Returns results with a Tweet ID greater than (that is, more recent than) the specified ID. */
+        /** Returns results with a Post ID greater than (that is, more recent than) the specified ID. */
         since_id?: components["schemas"]["TweetId"];
-        /** Returns results with a Tweet ID less than (that is, older than) the specified ID. */
+        /** Returns results with a Post ID less than (that is, older than) the specified ID. */
         until_id?: components["schemas"]["TweetId"];
         /** The maximum number of search results to be returned by a request. */
         max_results?: number;
@@ -3337,15 +4166,15 @@ export interface operations {
       };
     };
   };
-  /** Streams Tweets matching the stream's active rule set. */
+  /** Streams Posts matching the stream's active rule set. */
   searchStream: {
     parameters: {
       query: {
         /** The number of minutes of backfill requested. */
         backfill_minutes?: number;
-        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Tweets will be provided. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Posts will be provided. */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Tweets will be provided. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. */
         end_time?: string;
         /** A comma separated list of Tweet fields to display. */
         "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
@@ -3411,6 +4240,8 @@ export interface operations {
       query: {
         /** Dry Run can be used with both the add and delete action, with the expected result given, but without actually taking any action in the system (meaning the end state will always be as it was when the request was submitted). This is particularly useful to validate rule changes. */
         dry_run?: boolean;
+        /** Delete All can be used to delete all of the rules associated this client app, it should be specified with no other parameters. Once deleted, rules cannot be recovered. */
+        delete_all?: boolean;
       };
     };
     responses: {
@@ -3434,11 +4265,35 @@ export interface operations {
       };
     };
   };
-  /** Returns a variety of information about the Tweet specified by the requested ID. */
+  /** Returns the counts of rules from a User's active rule set, to reflect usage by project and application. */
+  getRuleCount: {
+    parameters: {
+      query: {
+        /** A comma separated list of RulesCount fields to display. */
+        "rules_count.fields"?: components["parameters"]["RulesCountFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Get2TweetsSearchStreamRulesCountsResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Returns a variety of information about the Post specified by the requested ID. */
   findTweetById: {
     parameters: {
       path: {
-        /** A single Tweet ID. */
+        /** A single Post ID. */
         id: components["schemas"]["TweetId"];
       };
       query: {
@@ -3472,11 +4327,11 @@ export interface operations {
       };
     };
   };
-  /** Delete specified Tweet (in the path) by ID. */
+  /** Delete specified Post (in the path) by ID. */
   deleteTweetById: {
     parameters: {
       path: {
-        /** The ID of the Tweet to be deleted. */
+        /** The ID of the Post to be deleted. */
         id: components["schemas"]["TweetId"];
       };
     };
@@ -3496,11 +4351,11 @@ export interface operations {
       };
     };
   };
-  /** Returns a list of Users that have liked the provided Tweet ID */
+  /** Returns a list of Users that have liked the provided Post ID */
   tweetsIdLikingUsers: {
     parameters: {
       path: {
-        /** A single Tweet ID. */
+        /** A single Post ID. */
         id: components["schemas"]["TweetId"];
       };
       query: {
@@ -3532,11 +4387,11 @@ export interface operations {
       };
     };
   };
-  /** Returns a variety of information about each Tweet that quotes the Tweet specified by the requested ID. */
+  /** Returns a variety of information about each Post that quotes the Post specified by the requested ID. */
   findTweetsThatQuoteATweet: {
     parameters: {
       path: {
-        /** A single Tweet ID. */
+        /** A single Post ID. */
         id: components["schemas"]["TweetId"];
       };
       query: {
@@ -3576,11 +4431,11 @@ export interface operations {
       };
     };
   };
-  /** Returns a list of Users that have retweeted the provided Tweet ID */
+  /** Returns a list of Users that have retweeted the provided Post ID */
   tweetsIdRetweetingUsers: {
     parameters: {
       path: {
-        /** A single Tweet ID. */
+        /** A single Post ID. */
         id: components["schemas"]["TweetId"];
       };
       query: {
@@ -3601,6 +4456,48 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["Get2TweetsIdRetweetedByResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
+  /** Returns a variety of information about each Post that has retweeted the Post specified by the requested ID. */
+  findTweetsThatRetweetATweet: {
+    parameters: {
+      path: {
+        /** A single Post ID. */
+        id: components["schemas"]["TweetId"];
+      };
+      query: {
+        /** The maximum number of results. */
+        max_results?: number;
+        /** This parameter is used to get the next 'page' of results. */
+        pagination_token?: components["schemas"]["PaginationToken36"];
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["TweetExpansionsParameter"];
+        /** A comma separated list of Media fields to display. */
+        "media.fields"?: components["parameters"]["MediaFieldsParameter"];
+        /** A comma separated list of Poll fields to display. */
+        "poll.fields"?: components["parameters"]["PollFieldsParameter"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of Place fields to display. */
+        "place.fields"?: components["parameters"]["PlaceFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Get2TweetsIdRetweetsResponse"];
         };
       };
       /** The request has failed. */
@@ -3638,6 +4535,32 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["TweetHideRequest"];
+      };
+    };
+  };
+  /** Returns the Post Usage. */
+  getUsageTweets: {
+    parameters: {
+      query: {
+        /** The number of days for which you need usage for. */
+        days?: number;
+        /** A comma separated list of Usage fields to display. */
+        "usage.fields"?: components["parameters"]["UsageFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Get2UsageTweetsResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
       };
     };
   };
@@ -3791,6 +4714,40 @@ export interface operations {
       };
     };
   };
+  /** Returns Users that match a search query. */
+  searchUserByQuery: {
+    parameters: {
+      query: {
+        /** TThe the query string by which to query for users. */
+        query: components["schemas"]["UserSearchQuery"];
+        /** The maximum number of results. */
+        max_results?: number;
+        /** This parameter is used to get the next 'page' of results. The value used with the parameter is pulled directly from the response provided by the API, and should not be modified. */
+        next_token?: components["schemas"]["PaginationToken36"];
+        /** A comma separated list of User fields to display. */
+        "user.fields"?: components["parameters"]["UserFieldsParameter"];
+        /** A comma separated list of fields to expand. */
+        expansions?: components["parameters"]["UserExpansionsParameter"];
+        /** A comma separated list of Tweet fields to display. */
+        "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
+      };
+    };
+    responses: {
+      /** The request has succeeded. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Get2UsersSearchResponse"];
+        };
+      };
+      /** The request has failed. */
+      default: {
+        content: {
+          "application/json": components["schemas"]["Error"];
+          "application/problem+json": components["schemas"]["Problem"];
+        };
+      };
+    };
+  };
   /** This endpoint returns information about a User. Specify User by ID. */
   findUserById: {
     parameters: {
@@ -3859,36 +4816,7 @@ export interface operations {
       };
     };
   };
-  /** Causes the User (in the path) to block the target User. The User (in the path) must match the User context authorizing the request */
-  usersIdBlock: {
-    parameters: {
-      path: {
-        /** The ID of the authenticated source User that is requesting to block the target User. */
-        id: components["schemas"]["UserIdMatchesAuthenticatedUser"];
-      };
-    };
-    responses: {
-      /** The request has succeeded. */
-      200: {
-        content: {
-          "application/json": components["schemas"]["BlockUserMutationResponse"];
-        };
-      };
-      /** The request has failed. */
-      default: {
-        content: {
-          "application/json": components["schemas"]["Error"];
-          "application/problem+json": components["schemas"]["Problem"];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["BlockUserRequest"];
-      };
-    };
-  };
-  /** Returns Tweet objects that have been bookmarked by the requesting User */
+  /** Returns Post objects that have been bookmarked by the requesting User */
   getUsersIdBookmarks: {
     parameters: {
       path: {
@@ -3930,7 +4858,7 @@ export interface operations {
       };
     };
   };
-  /** Adds a Tweet (ID in the body) to the requesting User's (in the path) bookmarks */
+  /** Adds a Post (ID in the body) to the requesting User's (in the path) bookmarks */
   postUsersIdBookmarks: {
     parameters: {
       path: {
@@ -3959,13 +4887,13 @@ export interface operations {
       };
     };
   };
-  /** Removes a Tweet from the requesting User's bookmarked Tweets. */
+  /** Removes a Post from the requesting User's bookmarked Posts. */
   usersIdBookmarksDelete: {
     parameters: {
       path: {
         /** The ID of the authenticated source User whose bookmark is to be removed. */
         id: components["schemas"]["UserIdMatchesAuthenticatedUser"];
-        /** The ID of the Tweet that the source User is removing from bookmarks. */
+        /** The ID of the Post that the source User is removing from bookmarks. */
         tweet_id: components["schemas"]["TweetId"];
       };
     };
@@ -4177,7 +5105,7 @@ export interface operations {
       };
     };
   };
-  /** Returns a list of Tweets liked by the provided User ID */
+  /** Returns a list of Posts liked by the provided User ID */
   usersIdLikedTweets: {
     parameters: {
       path: {
@@ -4219,11 +5147,11 @@ export interface operations {
       };
     };
   };
-  /** Causes the User (in the path) to like the specified Tweet. The User in the path must match the User context authorizing the request. */
+  /** Causes the User (in the path) to like the specified Post. The User in the path must match the User context authorizing the request. */
   usersIdLike: {
     parameters: {
       path: {
-        /** The ID of the authenticated source User that is requesting to like the Tweet. */
+        /** The ID of the authenticated source User that is requesting to like the Post. */
         id: components["schemas"]["UserIdMatchesAuthenticatedUser"];
       };
     };
@@ -4248,13 +5176,13 @@ export interface operations {
       };
     };
   };
-  /** Causes the User (in the path) to unlike the specified Tweet. The User must match the User context authorizing the request */
+  /** Causes the User (in the path) to unlike the specified Post. The User must match the User context authorizing the request */
   usersIdUnlike: {
     parameters: {
       path: {
-        /** The ID of the authenticated source User that is requesting to unlike the Tweet. */
+        /** The ID of the authenticated source User that is requesting to unlike the Post. */
         id: components["schemas"]["UserIdMatchesAuthenticatedUser"];
-        /** The ID of the Tweet that the User is requesting to unlike. */
+        /** The ID of the Post that the User is requesting to unlike. */
         tweet_id: components["schemas"]["TweetId"];
       };
     };
@@ -4310,7 +5238,7 @@ export interface operations {
       };
     };
   };
-  /** Returns Tweet objects that mention username associated to the provided User ID */
+  /** Returns Post objects that mention username associated to the provided User ID */
   usersIdMentions: {
     parameters: {
       path: {
@@ -4318,17 +5246,17 @@ export interface operations {
         id: components["schemas"]["UserId"];
       };
       query: {
-        /** The minimum Tweet ID to be included in the result set. This parameter takes precedence over start_time if both are specified. */
+        /** The minimum Post ID to be included in the result set. This parameter takes precedence over start_time if both are specified. */
         since_id?: components["schemas"]["TweetId"];
-        /** The maximum Tweet ID to be included in the result set. This parameter takes precedence over end_time if both are specified. */
+        /** The maximum Post ID to be included in the result set. This parameter takes precedence over end_time if both are specified. */
         until_id?: components["schemas"]["TweetId"];
         /** The maximum number of results. */
         max_results?: number;
         /** This parameter is used to get the next 'page' of results. */
         pagination_token?: components["schemas"]["PaginationToken36"];
-        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Tweets will be provided. The since_id parameter takes precedence if it is also specified. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Posts will be provided. The since_id parameter takes precedence if it is also specified. */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Tweets will be provided. The until_id parameter takes precedence if it is also specified. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. The until_id parameter takes precedence if it is also specified. */
         end_time?: string;
         /** A comma separated list of Tweet fields to display. */
         "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
@@ -4548,11 +5476,11 @@ export interface operations {
       };
     };
   };
-  /** Causes the User (in the path) to retweet the specified Tweet. The User in the path must match the User context authorizing the request. */
+  /** Causes the User (in the path) to repost the specified Post. The User in the path must match the User context authorizing the request. */
   usersIdRetweets: {
     parameters: {
       path: {
-        /** The ID of the authenticated source User that is requesting to retweet the Tweet. */
+        /** The ID of the authenticated source User that is requesting to repost the Post. */
         id: components["schemas"]["UserIdMatchesAuthenticatedUser"];
       };
     };
@@ -4577,13 +5505,13 @@ export interface operations {
       };
     };
   };
-  /** Causes the User (in the path) to unretweet the specified Tweet. The User must match the User context authorizing the request */
+  /** Causes the User (in the path) to unretweet the specified Post. The User must match the User context authorizing the request */
   usersIdUnretweets: {
     parameters: {
       path: {
-        /** The ID of the authenticated source User that is requesting to retweet the Tweet. */
+        /** The ID of the authenticated source User that is requesting to repost the Post. */
         id: components["schemas"]["UserIdMatchesAuthenticatedUser"];
-        /** The ID of the Tweet that the User is requesting to unretweet. */
+        /** The ID of the Post that the User is requesting to unretweet. */
         source_tweet_id: components["schemas"]["TweetId"];
       };
     };
@@ -4603,17 +5531,17 @@ export interface operations {
       };
     };
   };
-  /** Returns Tweet objects that appears in the provided User ID's home timeline */
+  /** Returns Post objects that appears in the provided User ID's home timeline */
   usersIdTimeline: {
     parameters: {
       path: {
-        /** The ID of the authenticated source User to list Reverse Chronological Timeline Tweets of. */
+        /** The ID of the authenticated source User to list Reverse Chronological Timeline Posts of. */
         id: components["schemas"]["UserIdMatchesAuthenticatedUser"];
       };
       query: {
-        /** The minimum Tweet ID to be included in the result set. This parameter takes precedence over start_time if both are specified. */
+        /** The minimum Post ID to be included in the result set. This parameter takes precedence over start_time if both are specified. */
         since_id?: components["schemas"]["TweetId"];
-        /** The maximum Tweet ID to be included in the result set. This parameter takes precedence over end_time if both are specified. */
+        /** The maximum Post ID to be included in the result set. This parameter takes precedence over end_time if both are specified. */
         until_id?: components["schemas"]["TweetId"];
         /** The maximum number of results. */
         max_results?: number;
@@ -4621,9 +5549,9 @@ export interface operations {
         pagination_token?: components["schemas"]["PaginationToken36"];
         /** The set of entities to exclude (e.g. 'replies' or 'retweets'). */
         exclude?: ("replies" | "retweets")[];
-        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Tweets will be provided. The since_id parameter takes precedence if it is also specified. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Posts will be provided. The since_id parameter takes precedence if it is also specified. */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Tweets will be provided. The until_id parameter takes precedence if it is also specified. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. The until_id parameter takes precedence if it is also specified. */
         end_time?: string;
         /** A comma separated list of Tweet fields to display. */
         "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
@@ -4655,7 +5583,7 @@ export interface operations {
       };
     };
   };
-  /** Returns a list of Tweets authored by the provided User ID */
+  /** Returns a list of Posts authored by the provided User ID */
   usersIdTweets: {
     parameters: {
       path: {
@@ -4663,9 +5591,9 @@ export interface operations {
         id: components["schemas"]["UserId"];
       };
       query: {
-        /** The minimum Tweet ID to be included in the result set. This parameter takes precedence over start_time if both are specified. */
+        /** The minimum Post ID to be included in the result set. This parameter takes precedence over start_time if both are specified. */
         since_id?: components["schemas"]["TweetId"];
-        /** The maximum Tweet ID to be included in the result set. This parameter takes precedence over end_time if both are specified. */
+        /** The maximum Post ID to be included in the result set. This parameter takes precedence over end_time if both are specified. */
         until_id?: components["schemas"]["TweetId"];
         /** The maximum number of results. */
         max_results?: number;
@@ -4673,9 +5601,9 @@ export interface operations {
         pagination_token?: components["schemas"]["PaginationToken36"];
         /** The set of entities to exclude (e.g. 'replies' or 'retweets'). */
         exclude?: ("replies" | "retweets")[];
-        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Tweets will be provided. The since_id parameter takes precedence if it is also specified. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The earliest UTC timestamp from which the Posts will be provided. The since_id parameter takes precedence if it is also specified. */
         start_time?: string;
-        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Tweets will be provided. The until_id parameter takes precedence if it is also specified. */
+        /** YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. The until_id parameter takes precedence if it is also specified. */
         end_time?: string;
         /** A comma separated list of Tweet fields to display. */
         "tweet.fields"?: components["parameters"]["TweetFieldsParameter"];
@@ -4696,32 +5624,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["Get2UsersIdTweetsResponse"];
-        };
-      };
-      /** The request has failed. */
-      default: {
-        content: {
-          "application/json": components["schemas"]["Error"];
-          "application/problem+json": components["schemas"]["Problem"];
-        };
-      };
-    };
-  };
-  /** Causes the source User to unblock the target User. The source User must match the User context authorizing the request */
-  usersIdUnblock: {
-    parameters: {
-      path: {
-        /** The ID of the authenticated source User that is requesting to unblock the target User. */
-        source_user_id: components["schemas"]["UserIdMatchesAuthenticatedUser"];
-        /** The ID of the User that the source User is requesting to unblock. */
-        target_user_id: components["schemas"]["UserId"];
-      };
-    };
-    responses: {
-      /** The request has succeeded. */
-      200: {
-        content: {
-          "application/json": components["schemas"]["BlockUserMutationResponse"];
         };
       };
       /** The request has failed. */
@@ -4791,6 +5693,12 @@ export interface external {}
 export type listBatchComplianceJobs = operations['listBatchComplianceJobs']
 export type createBatchComplianceJob = operations['createBatchComplianceJob']
 export type getBatchComplianceJob = operations['getBatchComplianceJob']
+export type dmConversationIdCreate = operations['dmConversationIdCreate']
+export type getDmConversationsWithParticipantIdDmEvents = operations['getDmConversationsWithParticipantIdDmEvents']
+export type dmConversationWithUserEventIdCreate = operations['dmConversationWithUserEventIdCreate']
+export type dmConversationByIdEventIdCreate = operations['dmConversationByIdEventIdCreate']
+export type getDmConversationsIdDmEvents = operations['getDmConversationsIdDmEvents']
+export type getDmEvents = operations['getDmEvents']
 export type listIdCreate = operations['listIdCreate']
 export type listIdDelete = operations['listIdDelete']
 export type listIdGet = operations['listIdGet']
@@ -4807,12 +5715,17 @@ export type searchSpaces = operations['searchSpaces']
 export type findSpaceById = operations['findSpaceById']
 export type spaceBuyers = operations['spaceBuyers']
 export type spaceTweets = operations['spaceTweets']
+export type getTrends = operations['getTrends']
 export type findTweetsById = operations['findTweetsById']
 export type createTweet = operations['createTweet']
 export type getTweetsComplianceStream = operations['getTweetsComplianceStream']
 export type tweetCountsFullArchiveSearch = operations['tweetCountsFullArchiveSearch']
 export type tweetCountsRecentSearch = operations['tweetCountsRecentSearch']
 export type getTweetsFirehoseStream = operations['getTweetsFirehoseStream']
+export type getTweetsFirehoseStreamLangEn = operations['getTweetsFirehoseStreamLangEn']
+export type getTweetsFirehoseStreamLangJa = operations['getTweetsFirehoseStreamLangJa']
+export type getTweetsFirehoseStreamLangKo = operations['getTweetsFirehoseStreamLangKo']
+export type getTweetsFirehoseStreamLangPt = operations['getTweetsFirehoseStreamLangPt']
 export type getTweetsLabelStream = operations['getTweetsLabelStream']
 export type sampleStream = operations['sampleStream']
 export type getTweetsSample10Stream = operations['getTweetsSample10Stream']
@@ -4821,20 +5734,23 @@ export type tweetsRecentSearch = operations['tweetsRecentSearch']
 export type searchStream = operations['searchStream']
 export type getRules = operations['getRules']
 export type addOrDeleteRules = operations['addOrDeleteRules']
+export type getRuleCount = operations['getRuleCount']
 export type deleteTweetById = operations['deleteTweetById']
 export type findTweetById = operations['findTweetById']
 export type tweetsIdLikingUsers = operations['tweetsIdLikingUsers']
 export type findTweetsThatQuoteATweet = operations['findTweetsThatQuoteATweet']
 export type tweetsIdRetweetingUsers = operations['tweetsIdRetweetingUsers']
+export type findTweetsThatRetweetATweet = operations['findTweetsThatRetweetATweet']
 export type hideReplyById = operations['hideReplyById']
+export type getUsageTweets = operations['getUsageTweets']
 export type findUsersById = operations['findUsersById']
 export type findUsersByUsername = operations['findUsersByUsername']
 export type findUserByUsername = operations['findUserByUsername']
 export type getUsersComplianceStream = operations['getUsersComplianceStream']
 export type findMyUser = operations['findMyUser']
+export type searchUserByQuery = operations['searchUserByQuery']
 export type findUserById = operations['findUserById']
 export type usersIdBlocking = operations['usersIdBlocking']
-export type usersIdBlock = operations['usersIdBlock']
 export type getUsersIdBookmarks = operations['getUsersIdBookmarks']
 export type postUsersIdBookmarks = operations['postUsersIdBookmarks']
 export type usersIdBookmarksDelete = operations['usersIdBookmarksDelete']
@@ -4859,6 +5775,5 @@ export type usersIdRetweets = operations['usersIdRetweets']
 export type usersIdUnretweets = operations['usersIdUnretweets']
 export type usersIdTimeline = operations['usersIdTimeline']
 export type usersIdTweets = operations['usersIdTweets']
-export type usersIdUnblock = operations['usersIdUnblock']
 export type usersIdUnfollow = operations['usersIdUnfollow']
 export type usersIdUnmute = operations['usersIdUnmute']
